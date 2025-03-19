@@ -7,9 +7,9 @@ export interface IProduct {
   price: number;
 }
 
-export interface IProductList {
+export interface IProductList<T> {
   total: number;
-  items: IProduct[];
+  items: T[];
 }
 
 export interface IOrder {
@@ -21,7 +21,7 @@ export interface IOrder {
 }
 
 export interface IOrderResponse {
-  paymnt: string;
+  payment: string;
   email: string;
   phone: string;
   address: string;
@@ -29,6 +29,6 @@ export interface IOrderResponse {
 }
 
 export interface IAPI {
-  getProducts(): Promise<IProductList>;
+  getProducts(): Promise<IProductList<IProduct>>;
   postOrder(order: IOrder): Promise<IOrderResponse>;
 }
