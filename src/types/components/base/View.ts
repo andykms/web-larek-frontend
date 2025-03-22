@@ -4,6 +4,10 @@ export interface IView<T, S = object> {
 	render(data?: Partial<T>): HTMLElement; 
 }
 
+export type attributeValues = {
+  [key: string]: string;
+}
+
 export interface IViewConstructor<T, S> {
 	new (root: HTMLElement, settings: S): IView<T>;
 }
