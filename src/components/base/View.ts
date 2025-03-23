@@ -7,13 +7,14 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 
 	// конструктор с элементом и настройками,
 	// в простейшем виде без проверок и дефолтных значений
-	constructor(public element: HTMLElement, protected readonly settings: S) {
+	constructor(public element: HTMLElement, protected readonly settings: S, value: T|undefined = undefined) {
 		// чтобы не переопределять конструктор, для компактности и соблюдения интерфейса
 		// можно реализовать так называемые методы жизненного цикла класса,
 		// которые вызываются в нужный момент и могут быть легко переопределены.
 		if (!this.element) {
 			throw new Error('Element is not defined');
 		}
+		this.init(value);
 	}
   protected cache = new Map<string, HTMLElement>();
 	// копирующий конструктор, чтобы настроить один раз
@@ -29,7 +30,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 	// методы жизненного цикла
 	// начальная инициализация, здесь можно создать элементы, повесить слушатели и т.д.
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	protected init() {}
+	protected init(value: T) {}
 
 	// рендер, вызывается когда надо обновить отображение с данными
 	render(data: Partial<T>): HTMLElement {
@@ -51,9 +52,9 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 
   protected setValue(selector: string, newValue: string|attributeValues) {
     if(!this.cache.has(selector)) {
-      const element: HTMLElement = document.querySelector(selector);
+      const element: HTMLElement = this.element.querySelector(selector);
       if(!element) {
-        throw new Error(`Element with selector ${selector} not found`);
+        throw new Error(`Element with selector ${selector} not found for set new value`);
       }
       this.cache.set(selector, element);
     }
@@ -67,7 +68,34 @@ export abstract class View<T, S extends object> implements IView<T, S> {
     } 
   }
 
+	protected addClass(selector: string, className: string) {
+		const element: HTMLElement = this.element.querySelector(selector);
+		if(!element) {
+			throw new Error(`Element with selector ${selector} not found for add new Class`);
+		}
+		element.classList.add(className);
+	}
 
-	// замена элемента на другой или его обновлённую версию
-	// с проверкой существования обоих
+	/*Метод для замены классов.
+	Если подается один удаляемый класс - он заменяется на новые классы
+	Если несколько удаляемых - они заменяются на новые классы */
+	protected toggleClass(selector: string, deletedClass: string|string[], newClasses: string|string[]) {
+		const element: HTMLElement = this.element.querySelector(selector);
+		if(!element) {
+			throw new Error(`Element with selector ${selector} not found for toggle Class`);
+		}
+		if(typeof deletedClass === 'string') {
+			deletedClass = [deletedClass as string];
+		} 
+		if(typeof newClasses === 'string') {
+			newClasses = [newClasses as string];
+		}
+		deletedClass.forEach((className: string) => {
+			element.classList.remove(className);
+		});
+		newClasses.forEach((className: string) => {
+			element.classList.add(className);
+		})	
+		console.log(element.classList);
+	}
 }

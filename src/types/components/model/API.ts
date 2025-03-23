@@ -4,7 +4,7 @@ export interface IProduct {
   image: string;
   title: string;
   category: string;
-  price: number;
+  price: string | number | null;
 }
 
 export interface IProductList<T> {
