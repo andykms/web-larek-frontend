@@ -4,7 +4,7 @@ import { IProduct } from "../../model/API";
 export interface IProductData extends IProduct {
 }
 
-type activeClasses = {
+export type activeClasses = {
   [key: string]: string;
 }
 

@@ -2,17 +2,15 @@
 import { IClickable } from "../../base/View";
 
 export interface IBasketProductData {
-  category: string;
+  index: number|string;
   title: string;
-  img: string;
-  price: number;
+  price: number|string|null;
 }
 
 export interface IBasketProductSettings extends IClickable<IBasketProductData> {
   index: string;
-  category: string;
   title: string;
-  img: string;
   price: string;  
+  nullPrice: string;
   deleteButton: string;
 }

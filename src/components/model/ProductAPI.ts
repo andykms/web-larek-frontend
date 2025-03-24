@@ -3,15 +3,30 @@ import { IAPI, IProductList, IProduct, IOrder, IOrderResponse } from '../../type
 
 
 export class ProductApi extends Api implements IAPI {
-  constructor(url: string) {
-    super(url);
+  constructor(protected API_URL: string, protected CDN_URL: string) {
+    super(API_URL);
   }
 
   getProducts(): Promise<IProductList<IProduct>> {
-      return this.get('/product') as Promise<IProductList<IProduct>>;
+      return (this.get('/product') as Promise<IProductList<IProduct>>)
+              .then((products)=>{
+                return this.formatProducts(products);
+              });
   }
 
   postOrder(order: IOrder): Promise<IOrderResponse> {
       return this.post(this.baseUrl, order) as Promise<IOrderResponse>;
+  }
+  
+  formatProducts(products: IProductList<IProduct>) {
+    products.items.map((product)=>{
+      return this.formatImage(product);
+    });
+    return products;
+  }
+
+  formatImage(product: IProduct) {
+    product.image = `${this.CDN_URL}${product.image}`;
+    return product;
   }
 }

@@ -12,4 +12,7 @@ export interface IBasketSettings extends ListSettings<IBasketProductData> {
   activeItemClass: string;
   itemClass: string;
    */
+  totalClass: string;
+  buttonClass: string;
+  totalPriceClass: string;
 }

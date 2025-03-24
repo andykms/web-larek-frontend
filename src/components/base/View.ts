@@ -98,4 +98,36 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		})	
 		console.log(element.classList);
 	}
+
+	protected appendChildView(selector: string, child: HTMLElement) {
+		if(!this.cache.has(selector)) {
+			const element: HTMLElement = this.element.querySelector(selector);
+			if(!element) {
+				throw new Error(`Element with selector ${selector} not found for push new Child`);
+			}
+			this.cache.set(selector, element);
+		}
+		const elementWithNewChild: HTMLElement = this.cache.get(selector);
+		if(elementWithNewChild) {
+			elementWithNewChild.appendChild(child);
+		}
+	}
+
+	protected removeChildView(selector: string, child: HTMLElement|undefined = undefined) {
+		if(!this.cache.has(selector)) {
+			const element: HTMLElement = this.element.querySelector(selector);
+			if(!element) {
+				throw new Error(`Element with selector ${selector} not found for push new Child`);
+			}
+			this.cache.set(selector, element);
+		}
+		const elementWithNewChild: HTMLElement = this.cache.get(selector);
+		if(elementWithNewChild) {
+			if(!child) {
+				elementWithNewChild.replaceChildren();
+			} else {
+				elementWithNewChild.removeChild(child);
+			}
+		}
+	}
 }

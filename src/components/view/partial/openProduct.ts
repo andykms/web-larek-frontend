@@ -1,7 +1,8 @@
 import { View } from "../../base/View";
 import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
+import { IOpenedProductData, IOpenedProductSettings } from "../../../types/components/view/partial/openProduct";
 
-export class Product extends View<IProductData, IProductSettings> {
+export class openProduct extends View<IOpenedProductData, IOpenedProductSettings> {
 
   protected init(data: IProductData|undefined = undefined): void {
     if(data === undefined) {
@@ -12,6 +13,7 @@ export class Product extends View<IProductData, IProductSettings> {
     this.setImg(data.image);
     this.setPrice(data.price);
     this.setCategoryClass(data.category);
+    this.setDescription(data.description);
   }
 
   setCategory(newCategoryValue: string) {
@@ -27,7 +29,11 @@ export class Product extends View<IProductData, IProductSettings> {
   }
 
   setPrice(newPrice: string|number) {
-    this.setValue(this.settings.price, this.formatPrice(newPrice));
+    if(newPrice === null || newPrice === undefined) {
+      this.setValue(this.settings.price, this.settings.nullPrice);
+      return;
+    }
+    this.setValue(this.settings.price, String(newPrice));
   }
 
   setCategoryClass(category: string) {
@@ -35,10 +41,7 @@ export class Product extends View<IProductData, IProductSettings> {
     this.toggleClass(this.settings.category, this.settings.templateBaseCategory.slice(1), categoryClass.slice(1));
   }
 
-  formatPrice(price: string|number): string {
-    if(price === null || price === undefined || !Boolean(price)) {
-      return this.settings.nullPrice;
-    }
-    return price.toString();
+  setDescription(newDescriptionValue: string) {
+    this.setValue(this.settings.description, newDescriptionValue);
   }
 }

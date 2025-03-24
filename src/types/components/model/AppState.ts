@@ -2,7 +2,7 @@ import { IProduct, IOrder, IOrderResponse, IProductList } from "./API";
 
 export interface IBasketProduct {
   title: string;
-  price: number;
+  price: number|string;
 }
 
 export interface IBasket<T> {
@@ -11,14 +11,14 @@ export interface IBasket<T> {
 
 export interface IAppState {
   /*Товары */
-  products: IProduct[];
-  /*Выбранный товар */
-  selectedProduct: IProduct;
+  products: Map<string, IProduct>;
+  /*Выбранный товар */ 
+  selectedProduct: string | null;
   
   /*Количество товаров в корзине */
   basketTotal: number;
   /*Корзина */
-  basket: IBasket<IBasketProduct>;
+  basket: Map<string, IBasketProduct>;
   /*Заказ */
   order: IOrder;
   /*Заказ готов к отправке */
@@ -33,7 +33,7 @@ export interface IAppState {
   /*Добавить продукт в корзину  */
   addProductToBasket(product: IProduct): void;
   /*Удалить продукт из корзины */
-  removeProductFromBasket(product: IBasketProduct): void;
+  removeProductFromBasket(id: string): void;
 
   /*Выбрать способ оплаты */
   choosePaymentMethod(paymentMethod: Payments): void;
@@ -51,7 +51,7 @@ export interface IAppState {
   isValidPhone(): boolean;
 
   /*Отправить заказ */
-  submitOrder(order: IOrder): Promise<IOrderResponse>;
+  submitOrder(): Promise<IOrderResponse>;
 
   /*Открыть модальное окно */
   openModal(modal: AppStateModals): void;
