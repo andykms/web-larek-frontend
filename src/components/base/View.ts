@@ -7,7 +7,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 
 	// конструктор с элементом и настройками,
 	// в простейшем виде без проверок и дефолтных значений
-	constructor(public element: HTMLElement, protected readonly settings: S, value: T|undefined = undefined) {
+	constructor(public element: HTMLElement, readonly settings: S, value: T|undefined = undefined) {
 		// чтобы не переопределять конструктор, для компактности и соблюдения интерфейса
 		// можно реализовать так называемые методы жизненного цикла класса,
 		// которые вызываются в нужный момент и могут быть легко переопределены.
@@ -27,13 +27,14 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		);
 	}
 
+
 	// методы жизненного цикла
 	// начальная инициализация, здесь можно создать элементы, повесить слушатели и т.д.
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	protected init(value: T) {}
 
 	// рендер, вызывается когда надо обновить отображение с данными
-	render(data: Partial<T>): HTMLElement {
+	render(selector: string|undefined = undefined): HTMLElement {
 		// Простая реализация рендера позволяющая, в том числе
 		// установить сеттеры для отдельных полей
 		// и вызывать их через поверхностное копирование.
@@ -43,22 +44,32 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 			// главное это прописать тип данных для рендера в дочерних классах
 			Object.assign(this, data);
 		}*/
-		return this.element;
+		if(!selector) {
+			return this.element
+		} else {
+			return this.getElementFromCache(selector);
+		}
 	}
 
 	// ... другие методы которые помогут строить отображение
 
 	// Обернем метод проверки элемента из утилит в кеш, чтобы повторно не искать по DOM
+	protected getElementFromCache(selector: string): HTMLElement {
+		if(!this.cache.has(selector)) {
+			let element: HTMLElement = this.element.querySelector(selector);
+			if(!element) {
+				element = document.querySelector(selector);
+				if(!element) {
+					throw new Error(`Element with selector ${selector} not found`);
+				}
+			}
+			this.cache.set(selector, element);
+		}
+		return this.cache.get(selector);
+	}
 
   protected setValue(selector: string, newValue: string|attributeValues) {
-    if(!this.cache.has(selector)) {
-      const element: HTMLElement = this.element.querySelector(selector);
-      if(!element) {
-        throw new Error(`Element with selector ${selector} not found for set new value`);
-      }
-      this.cache.set(selector, element);
-    }
-    const elementWithNewValue: HTMLElement = this.cache.get(selector);
+    const elementWithNewValue: HTMLElement = this.getElementFromCache(selector);
     if(newValue instanceof Object){
       Object.keys(newValue).forEach((key: string) => {
         elementWithNewValue.setAttribute(key, newValue[key]);
@@ -69,7 +80,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
   }
 
 	protected addClass(selector: string, className: string) {
-		const element: HTMLElement = this.element.querySelector(selector);
+		const element: HTMLElement = this.getElementFromCache(selector);
 		if(!element) {
 			throw new Error(`Element with selector ${selector} not found for add new Class`);
 		}
@@ -99,29 +110,23 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		console.log(element.classList);
 	}
 
-	protected appendChildView(selector: string, child: HTMLElement) {
-		if(!this.cache.has(selector)) {
-			const element: HTMLElement = this.element.querySelector(selector);
-			if(!element) {
-				throw new Error(`Element with selector ${selector} not found for push new Child`);
-			}
-			this.cache.set(selector, element);
+	protected removeClass(selector: string, className: string) {
+		const element: HTMLElement = this.getElementFromCache(selector);
+		if(!element) {
+			throw new Error(`Element with selector ${selector} not found for remove Class`);
 		}
-		const elementWithNewChild: HTMLElement = this.cache.get(selector);
+		element.classList.remove(className);
+	}
+
+	protected appendChildView(selector: string, child: HTMLElement) {
+		const elementWithNewChild: HTMLElement = this.getElementFromCache(selector);
 		if(elementWithNewChild) {
 			elementWithNewChild.appendChild(child);
 		}
 	}
 
 	protected removeChildView(selector: string, child: HTMLElement|undefined = undefined) {
-		if(!this.cache.has(selector)) {
-			const element: HTMLElement = this.element.querySelector(selector);
-			if(!element) {
-				throw new Error(`Element with selector ${selector} not found for push new Child`);
-			}
-			this.cache.set(selector, element);
-		}
-		const elementWithNewChild: HTMLElement = this.cache.get(selector);
+		const elementWithNewChild: HTMLElement = this.getElementFromCache(selector);
 		if(elementWithNewChild) {
 			if(!child) {
 				elementWithNewChild.replaceChildren();

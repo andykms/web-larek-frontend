@@ -1,10 +1,11 @@
+import { Payments } from "./AppState";
 export interface IProduct {
   id: string;
   description: string;
   image: string;
   title: string;
   category: string;
-  price: string | number | null;
+  price: number | null;
 }
 
 export interface IProductList<T> {
@@ -13,7 +14,7 @@ export interface IProductList<T> {
 }
 
 export interface IOrder {
-  payment: string;
+  payment: Payments;
   email: string;
   phone: string;
   address: string;

@@ -72,6 +72,7 @@ export enum AppStateModals {
 }
 
 export enum Payments {
+  none = undefined,
   online = 'online',
   offline = 'offline'
 }

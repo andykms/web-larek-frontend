@@ -25,7 +25,7 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
   }
 
   setImg(imageSrc: string) {
-    this.setValue(this.settings.img, {src: imageSrc});
+    this.setValue(this.settings.image, {src: imageSrc});
   }
 
   setPrice(newPrice: string|number) {

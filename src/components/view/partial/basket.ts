@@ -1,24 +1,49 @@
 import { IBasketData, IBasketSettings } from "../../../types/components/view/partial/basket";
 import { View } from "../../base/View";
 import { IBasketProduct } from "../../../types/components/model/AppState";
+import { BasketProductView } from "./basketProduct";
+
 export class Basket extends View<IBasketData, IBasketSettings> {
 
+  private items: Map<number, BasketProductView> = new Map<number, BasketProductView>();
+
   protected init(data: IBasketData|undefined = undefined): void {
+    if(data === undefined) {
+      return;
+    }
   }
 
-  protected insertProduct(product: HTMLElement): void {
-    this.appendChildView(this.settings.listClass, product);
+  showProducts(): void {
+    Array.from(this.items.values()).forEach((product) => {
+      this.appendChildView(this.settings.listClass, product.render());
+    });
   }
 
-  protected removeProduct(product: HTMLElement): void {
-    this.removeChildView(this.settings.listClass, product);
+  insertProduct(product: BasketProductView): void {
+    this.items.set(this.items.size, product);
+    product.setIndex(this.items.size);
   }
 
-  protected updateTotalPrice(price: number|string): void {
+  removeProduct(product: BasketProductView): void {
+    this.removeChildView(this.settings.listClass, product.render());
+    this.items.delete(product.index);
+    this.updateIndexes();
+  }
+
+  updateTotalPrice(price: number|string): void {
     this.setValue(this.settings.totalPriceClass, price.toString());
   }
 
-  protected updateTotalBasket(total: number|string): void {
+  updateTotalBasket(total: number|string): void {
     this.setValue(this.settings.totalClass, total.toString());
   }
+
+  updateIndexes() {
+    Array.from(this.items.values()).forEach((product, index) => {
+      this.items.set(index, product);
+      product.setIndex(index);
+    });
+  }
+
+  
 }

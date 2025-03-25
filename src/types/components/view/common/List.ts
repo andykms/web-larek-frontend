@@ -10,7 +10,7 @@ export interface ListData<T> {
 	items: T[];
 }
 
-export interface ListSettings<T> {
-	item: IView<T, unknown>;
+export interface ListSettings {
 	listClass: string;
+	itemTemplateClass: string;
 }

@@ -10,7 +10,7 @@ export interface IOpenedProductData extends IProduct {
 export interface IOpenedProductSettings extends IClickable<IOpenedProductData> {
   category: string;
   title: string;
-  img: string;
+  image: string;
   price: string;
   description: string;
   buyButton: string;

@@ -12,6 +12,7 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
 
   open(): void {
     this.element.classList.add(this.settings.activeClass);
+    console.log("Modal -> open()")
   };
   close(): void {
     this.element.classList.remove(this.settings.activeClass);
