@@ -42,17 +42,17 @@ export class AppState extends Model<IAppState> {
       title: product.title,
       price: product.price,
     });
-    this.emitChanges('basket:changed', this.basket);
+    this.emitChanges('basket:changed:add', product);
   }
 
   /*Удалить продукт из корзины */
   removeProductFromBasket(id: string): void {
     if(this.basket.has(id)) {
+      this.emitChanges('basket:changed:remove', {id});
       this.basket.delete(id);
     } else {
       throw new Error('Product not found');
     }
-    this.emitChanges('basket:changed', this.basket);
   }
 
   /*Выбрать способ оплаты */

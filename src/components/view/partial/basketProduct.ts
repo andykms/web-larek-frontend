@@ -4,9 +4,11 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
   public price: number;
   public index: number;
   public title: string;
-  
+  public id: string
   protected init(data: IBasketProductData|undefined = undefined): void {
+    
     if(data) {
+      this.id = data.id;
       this.price = data.price;
       this.title = data.title;
       this.price = data.price;
@@ -39,6 +41,7 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
   }
 
   public setIndex(index: number): void {
+    this.index = index;
     this.setValue(this.settings.index, index.toString());
   }
 
