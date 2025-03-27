@@ -12,20 +12,11 @@ export interface IViewConstructor<T, S> {
 	new (root: HTMLElement, settings: S): IView<T>;
 }
 
-export type IClickableEvent<T> = {
-  event: MouseEvent;
-  item?: T;
-}
 
 export interface IClickable<T> {
-  onClick(event: IClickableEvent<T>): void;
-}
-
-export type IChangeableEvent<T> = {
-  event: Event;
-  value?: T;
+  onClick?(event: Event): void;
 }
 
 export interface IChangeable<T> {
-  onChange(event: IChangeableEvent<T>): void;
+  onChange?(event:  Event): void;
 }

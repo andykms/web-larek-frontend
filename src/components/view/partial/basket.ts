@@ -2,6 +2,7 @@ import { IBasketData, IBasketSettings } from "../../../types/components/view/par
 import { View } from "../../base/View";
 import { IBasketProduct } from "../../../types/components/model/AppState";
 import { BasketProductView } from "./basketProduct";
+import { ListWithIndexes } from "../../base/List";
 
 export class Basket extends View<IBasketData, IBasketSettings> {
 
@@ -45,5 +46,7 @@ export class Basket extends View<IBasketData, IBasketSettings> {
     });
   }
 
-  
+  getProducts(): BasketProductView[] {
+    return Array.from(this.items.values());
+  }
 }

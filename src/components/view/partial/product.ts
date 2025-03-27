@@ -4,14 +4,17 @@ import { IProductData, IProductSettings } from "../../../types/components/view/p
 export class Product extends View<IProductData, IProductSettings> {
 
   protected init(data: IProductData|undefined = undefined): void {
-    if(data === undefined) {
-      return;
+    if(data) {
+      this.setCategory(data.category);
+      this.setTitle(data.title);
+      this.setImg(data.image);
+      this.setPrice(data.price);
+      this.setCategoryClass(data.category);
     }
-    this.setCategory(data.category);
-    this.setTitle(data.title);
-    this.setImg(data.image);
-    this.setPrice(data.price);
-    this.setCategoryClass(data.category);
+    if(this.settings.onClick) {
+      this.element.addEventListener('click', this.settings.onClick);
+    }
+
   }
 
   setCategory(newCategoryValue: string) {

@@ -5,12 +5,17 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
   public index: number;
   public title: string;
   
-  protected init(data: IBasketProductData): void {
-    this.price = data.price;
-    this.title = data.title;
-    this.price = data.price;
-    this.setTitle(data.title);
-    this.setPrice(data.price);
+  protected init(data: IBasketProductData|undefined = undefined): void {
+    if(data) {
+      this.price = data.price;
+      this.title = data.title;
+      this.price = data.price;
+      this.setTitle(data.title);
+      this.setPrice(data.price);
+    }
+    if(this.settings.onClick) {
+      this.render(this.settings.deleteButton).addEventListener('click', this.settings.onClick);
+    }
   }
 
   public setTitle(title: string): void {

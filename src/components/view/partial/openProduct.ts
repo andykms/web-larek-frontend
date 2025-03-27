@@ -5,15 +5,17 @@ import { IOpenedProductData, IOpenedProductSettings } from "../../../types/compo
 export class openProduct extends View<IOpenedProductData, IOpenedProductSettings> {
 
   protected init(data: IProductData|undefined = undefined): void {
-    if(data === undefined) {
-      return;
+    if(data) {
+      this.setCategory(data.category);
+      this.setTitle(data.title);
+      this.setImg(data.image);
+      this.setPrice(data.price);
+      this.setCategoryClass(data.category);
+      this.setDescription(data.description);
     }
-    this.setCategory(data.category);
-    this.setTitle(data.title);
-    this.setImg(data.image);
-    this.setPrice(data.price);
-    this.setCategoryClass(data.category);
-    this.setDescription(data.description);
+    if(this.settings.onClick) {
+      this.render(this.settings.buyButton).addEventListener('click', this.settings.onClick);
+    }
   }
 
   setCategory(newCategoryValue: string) {

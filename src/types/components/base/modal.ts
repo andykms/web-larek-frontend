@@ -8,7 +8,7 @@ export interface Modal {
   toggleContent(newContent: HTMLElement): void;
 }
 
-export interface ModalSettings extends IClickable<Modal> {
+export interface ModalSettings {
   activeClass: string;
   modalContent: string;
   buttonClose: string;

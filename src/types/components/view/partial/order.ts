@@ -6,9 +6,11 @@ export interface IOrderData {
   address: string;
 }
 
-export interface IOrderSettings extends IChangeable<IOrderData> {
+export interface IOrderSettings {
   buttonOnline: string;
   buttonOffline: string;
   activeButton: string;
   addressInput: string;
+  submitButton: string;
+  formError: string;
 }

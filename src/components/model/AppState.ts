@@ -3,14 +3,11 @@ import { AppStateModals, IAppState, IBasketProduct, Payments } from "../../types
 import { IOrder, IOrderResponse } from "../../types/components/model/API";
 import { IAPI } from "../../types/components/model/API";
 import { Api } from "../base/api";
-
-export class AppState implements IAppState {
-  constructor(protected api: IAPI) {
-
-  }
+import { Model } from "../base/Model";
+export class AppState extends Model<IAppState> {
 
   products: Map<string, IProduct> = new Map<string, IProduct>();
-  selectedProduct: string | null = null;
+  selectedProducts: string[] | null = null;
   basket: Map<string, IBasketProduct> = new Map<string, IBasketProduct>();
   order: IOrder = {
     payment: Payments.online,
@@ -26,30 +23,26 @@ export class AppState implements IAppState {
     return Array.from(this.basket.values()).reduce((total, product) => total + 1, 0);
   }
 
-  async loadProducts(): Promise<void> {
-    this.products.clear();
-    const products = await this.api.getProducts()
-    products.items.forEach((product) => {
+  loadProducts(items: IProduct[]) {
+    items.forEach((product) => {
       this.products.set(product.id, product);
     });
+    this.emitChanges('items:changed', {products: this.products})
   }
 
   /*Выбрать определенный продукт */
   selectProduct(id: string): void {
-    if(this.products.has(id)) {
-      this.selectedProduct = id;
-    } else {
-      this.selectedProduct = null;
-      throw new Error('Product not found');
-    }
+    this.selectedProducts.push(id);
   }
 
   /*Добавить продукт в корзину  */
   addProductToBasket(product: IProduct): void {
     this.basket.set(product.id, {
+      id: product.id,
       title: product.title,
       price: product.price,
     });
+    this.emitChanges('basket:changed', this.basket);
   }
 
   /*Удалить продукт из корзины */
@@ -59,6 +52,7 @@ export class AppState implements IAppState {
     } else {
       throw new Error('Product not found');
     }
+    this.emitChanges('basket:changed', this.basket);
   }
 
   /*Выбрать способ оплаты */
@@ -94,17 +88,19 @@ export class AppState implements IAppState {
   }
 
   /*Отправить заказ */
-  async submitOrder(): Promise<IOrderResponse> {
-    return await this.api.postOrder(this.order);
+  submitOrder(): void {
+    this.emitChanges('order:submitted', {order: this.order});
   }
 
   /*Открыть модальное окно */
   openModal(modal: AppStateModals): void {
     this.openedModal = modal;
+    this.emitChanges('modal:open', {modal: this.openedModal});
   }
   /*Закрыть модальное окно */
   closeModal(modal: AppStateModals): void {
     this.openedModal = AppStateModals.main;
+    this.emitChanges('modal:close', {modal: this.openedModal});
   }
 
   /*Установить сообщение */

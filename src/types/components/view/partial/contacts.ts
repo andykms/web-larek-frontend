@@ -7,9 +7,10 @@ export interface IContactsData {
   phone: string;
 }
 
-export interface IContactsSettings extends IClickable<IContactsData> {
+export interface IContactsSettings {
   emailInput: string;
   phoneInput: string;
   submitButton: string;
+  formError: string;
   regex: string;
 }

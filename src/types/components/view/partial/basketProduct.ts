@@ -2,6 +2,7 @@
 import { IClickable } from "../../base/View";
 
 export interface IBasketProductData {
+  id: string;
   title: string;
   price: number|null;
 }
