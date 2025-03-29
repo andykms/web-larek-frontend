@@ -161,18 +161,16 @@ events.on('product:selected', (product) => {
   modalWindow.open();
   settings.openProductSettings.onClick = () => {
     appData.addProductToBasket(product as IProduct);
-    modalWindow.close();
   }; 
   const productView = new openProduct(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData).render();
   modalWindow.pushContent(productView);
 });
 
 events.on('basket:changed:add', (product: IProduct) => {
-    settings.basketProductSettings.onClick = () => {
-      appData.removeProductFromBasket(product.id);
-    };
-    const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), settings.basketProductSettings, events, product);
-    basketView.insertProduct(basketProduct);
+  settings.basketProductSettings.onClick = () => {
+    appData.removeProductFromBasket(product.id);
+  };
+  basketView.insertProduct(cardBasketTemplate, settings.basketProductSettings, product);
 });
 
 events.on('basket:changed:remove', (product: IBasketProduct) => {
@@ -182,6 +180,11 @@ events.on('basket:changed:remove', (product: IBasketProduct) => {
 events.on("basket:open", () =>{
   modalWindow.open();
   basketView.showProducts();
+  settings.basketSettings.onSubmit = () => {
+    if(appData.isBasketNotEmpty) {
+      events.emit("order:open");
+    }
+  };
   modalWindow.pushContent(basketView.render());
 })
 

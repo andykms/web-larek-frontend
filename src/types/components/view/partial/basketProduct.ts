@@ -13,4 +13,5 @@ export interface IBasketProductSettings extends IClickable<IBasketProductData> {
   price: string;  
   nullPrice: string;
   deleteButton: string;
+  currency: string;
 }

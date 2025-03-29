@@ -20,6 +20,7 @@ export const settings = {
         'хард-скил': '.card__category_hard',
       },
     templateBaseCategory: '.card__category_other',
+    currency: 'синапсов',
     onClick: () => {
     },
   },
@@ -39,6 +40,8 @@ export const settings = {
       'хард-скил': '.card__category_hard',
     },
     templateBaseCategory: '.card__category_other',
+    currency: 'синапсов',
+    errorButtonText: 'К сожалению, недоступно для покупки!',
     onClick: () => {
     }
   },
@@ -47,6 +50,10 @@ export const settings = {
     totalClass: ".header__basket-counter",
     buttonClass: ".basket__button",
     totalPriceClass: ".basket__price",
+    currency: 'синапсов',
+    onSubmit: ()=>{
+
+    }
   },
   basketProductSettings: {
     index: ".basket__item-index",
@@ -54,6 +61,7 @@ export const settings = {
     price: ".card__price",
     nullPrice: "Бесценно",
     deleteButton: ".basket__item-delete",
+    currency: 'синапсов',
     onClick: () => {
     }
   },

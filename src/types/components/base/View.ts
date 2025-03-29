@@ -17,6 +17,10 @@ export interface IClickable<T> {
   onClick?(event: Event): void;
 }
 
+export interface ISubmit {
+  onSubmit(event: Event): void;
+}
+
 export interface IChangeable<T> {
   onChange?(event:  Event): void;
 }

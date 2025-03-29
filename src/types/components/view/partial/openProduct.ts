@@ -17,4 +17,6 @@ export interface IOpenedProductSettings extends IClickable<IOpenedProductData> {
   nullPrice: string;
   categoriesClasses: activeClasses;
   templateBaseCategory: string;
+  currency: string;
+  errorButtonText: string;
 }

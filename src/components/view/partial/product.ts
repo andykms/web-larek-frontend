@@ -29,8 +29,8 @@ export class Product extends View<IProductData, IProductSettings> {
     this.setValue(this.settings.img, {src: imageSrc});
   }
 
-  setPrice(newPrice: string|number) {
-    this.setValue(this.settings.price, this.formatPrice(newPrice));
+  setPrice(newPrice: number) {
+    this.setValue(this.settings.price, this.formatPrice(newPrice, this.settings.currency));
   }
 
   setCategoryClass(category: string) {
@@ -38,10 +38,19 @@ export class Product extends View<IProductData, IProductSettings> {
     this.toggleClass(this.settings.category, this.settings.templateBaseCategory.slice(1), categoryClass.slice(1));
   }
 
-  formatPrice(price: string|number): string {
-    if(price === null || price === undefined || !Boolean(price)) {
+  private formatPrice(price: number, currency: string): string {
+    if(!this.isPriceNumber(price)) {
       return this.settings.nullPrice;
     }
-    return price.toString();
+    return this.addCurrency(price, currency);
+  }
+
+  private isPriceNumber(price: number): boolean {
+    const regex: RegExp = /[0-9]+/;
+    return regex.test(String(price));
+  }
+
+  private addCurrency(price: number, currency: string): string {
+    return `${price} ${currency}`;
   }
 }

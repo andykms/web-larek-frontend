@@ -55,6 +55,17 @@ export class AppState extends Model<IAppState> {
     }
   }
 
+  get basketSize(): number {
+    return this.basket.size - 1;
+  }
+
+  get isBasketNotEmpty(): boolean {
+    if(this.basketSize > 0) {
+      return true;
+    }
+    return false;
+  }
+
   /*Выбрать способ оплаты */
   choosePaymentMethod(paymentMethod: Payments): void {
     this.order.payment = paymentMethod;

@@ -3,9 +3,16 @@ import { IProductData, IProductSettings } from "../../../types/components/view/p
 import { IOpenedProductData, IOpenedProductSettings } from "../../../types/components/view/partial/openProduct";
 
 export class openProduct extends View<IOpenedProductData, IOpenedProductSettings> {
-
+  public price: number;
+  public index: number;
+  public title: string;
+  public id: string
   protected init(data: IProductData|undefined = undefined): void {
     if(data) {
+      this.id = data.id;
+      this.price = data.price;
+      this.title = data.title;
+      this.price = data.price;
       this.setCategory(data.category);
       this.setTitle(data.title);
       this.setImg(data.image);
@@ -30,12 +37,12 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
     this.setValue(this.settings.image, {src: imageSrc});
   }
 
-  setPrice(newPrice: string|number) {
-    if(newPrice === null || newPrice === undefined) {
-      this.setValue(this.settings.price, this.settings.nullPrice);
-      return;
+  setPrice(newPrice: number) {
+    this.setValue(this.settings.price, this.formatPrice(newPrice, this.settings.currency));
+    if(!this.isPriceNumber(newPrice)) {
+      this.setValue(this.settings.buyButton, this.settings.errorButtonText);
+      this.setValue(this.settings.buyButton, {disabled: 'disabled'});
     }
-    this.setValue(this.settings.price, String(newPrice));
   }
 
   setCategoryClass(category: string) {
@@ -45,5 +52,21 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
 
   setDescription(newDescriptionValue: string) {
     this.setValue(this.settings.description, newDescriptionValue);
+  }
+
+  private formatPrice(price: number, currency: string): string {
+    if(!this.isPriceNumber(price)) {
+      return this.settings.nullPrice;
+    }
+    return this.addCurrency(price, currency);
+  }
+
+  private isPriceNumber(price: number): boolean {
+    const regex: RegExp = /[0-9]+/;
+    return regex.test(String(price));
+  }
+
+  private addCurrency(price: number, currency: string): string {
+    return `${price} ${currency}`;
   }
 }

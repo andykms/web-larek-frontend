@@ -3,15 +3,19 @@ import { View } from "../../base/View";
 import { IBasketProduct } from "../../../types/components/model/AppState";
 import { BasketProductView } from "./basketProduct";
 import { ListWithIndexes } from "../../base/List";
+import { IBasketProductSettings } from "../../../types/components/view/partial/basketProduct";
+import { cloneTemplate } from "../../../utils/utils";
 
 export class Basket extends View<IBasketData, IBasketSettings> {
   private items: Map<string, BasketProductView> = new Map<string, BasketProductView>();
 
   protected init(data: IBasketData|undefined = undefined): void {
     if(data) {
-
-      return;
+      if(this.settings.onSubmit) {
+        this.render(this.settings.buttonClass).addEventListener('click', this.settings.onSubmit);
+      }
     }
+    
   }
   
   clearProducts(): void {
@@ -23,36 +27,60 @@ export class Basket extends View<IBasketData, IBasketSettings> {
     Array.from(this.items.values()).forEach((product) => {
       this.appendChildView(this.settings.listClass, product.render());
     });
+    this.setTotalPrice();
   }
 
-  insertProduct(product: BasketProductView): void {
-    product.setIndex(this.items.size + 1);
-    this.items.set(product.id, product);
+  insertProduct(cardBasketTemplate: HTMLTemplateElement, basketProductSettings: IBasketProductSettings, product: IBasketProduct): void {
+    const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), basketProductSettings, this.events, product);
+    basketProduct.setIndex(this.items.size + 1);
+    this.items.set(product.id, basketProduct);
   }
 
   removeProduct(productId: string) {
+    const productView = this.getProductFromMap(productId);
+    this.removeProductView(productView);
+    this.deleteProductFromMap(productId);
+    this.updateIndexes();
+    this.setTotalPrice();
+  }
+
+  private getProductFromMap(productId: string): BasketProductView {
     if(this.items.has(productId)) {
-      this.removeProductView(this.items.get(productId));
-      this.items.delete(productId);
-      this.updateIndexes();
+      return this.items.get(productId);
     } else {
-      throw new Error('Product not found before remove View');
+      throw new Error('Product not found before get View');
     }
   }
 
-  removeProductView(product: BasketProductView): void {
-    this.removeChildView(this.settings.listClass, product.render());
+  private get totalPrice(): number {
+    let total = 0;
+    Array.from(this.items.values()).forEach((product: BasketProductView)=>{
+      total += product.price;
+    })
+    return total
   }
 
-  updateTotalPrice(price: number|string): void {
-    this.setValue(this.settings.totalPriceClass, price.toString());
+  private setTotalPrice(): void {
+    this.setValue(this.settings.totalPriceClass, this.addCurrency(this.totalPrice, this.settings.currency))
+  }
+
+  private deleteProductFromMap(productId: string) {
+    if(this.items.has(productId)) {
+      this.items.delete(productId);
+    } else {
+      throw new Error('Product not found before delete from map');
+    }
+  }
+
+  private removeProductView(product: BasketProductView): void {
+    this.removeChildView(this.settings.listClass, product.render());
   }
 
   updateTotalBasket(total: number|string): void {
     this.setValue(this.settings.totalClass, total.toString());
   }
 
-  updateIndexes() {
+  private updateIndexes() {
     Array.from(this.items.values()).forEach((product, index) => {
       product.setIndex(index + 1);
     });
@@ -60,5 +88,9 @@ export class Basket extends View<IBasketData, IBasketSettings> {
 
   getProducts(): BasketProductView[] {
     return Array.from(this.items.values());
+  } 
+
+  private addCurrency(price: number, currency: string): string {
+    return `${price} ${currency}`;
   }
 }

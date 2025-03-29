@@ -24,8 +24,8 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
     this.setValue(this.settings.title, title);
   }
 
-  public setPrice(newPrice: number): void {
-    this.setValue(this.settings.price, this.formatPrice(newPrice));
+  setPrice(newPrice: number) {
+    this.setValue(this.settings.price, this.addCurrency(newPrice, this.settings.currency));
   }
 
   public increasePrice(): void {
@@ -45,10 +45,7 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
     this.setValue(this.settings.index, index.toString());
   }
 
-  formatPrice(price: number): string {
-    if(price === null || price === undefined || !Boolean(price)) {
-      return this.settings.nullPrice;
-    }
-    return price.toString();
+  private addCurrency(price: number, currency: string): string {
+    return `${price} ${currency}`;
   }
 }
