@@ -4,6 +4,9 @@ import { IOrder, IOrderResponse } from "../../types/components/model/API";
 import { IAPI } from "../../types/components/model/API";
 import { Api } from "../base/api";
 import { Model } from "../base/Model";
+import { IAddressOptions } from "../../types/components/model/AppState";
+
+
 export class AppState extends Model<IAppState> {
 
   products: Map<string, IProduct> = new Map<string, IProduct>();
@@ -30,6 +33,12 @@ export class AppState extends Model<IAppState> {
     this.emitChanges('items:changed', {products: this.products})
   }
 
+  startOrder(): void {
+    if(this.isBasketNotEmpty) {
+      this.emitChanges("order:open");
+    }
+  }
+
   /*Выбрать определенный продукт */
   selectProduct(id: string): void {
     this.selectedProducts.push(id);
@@ -48,15 +57,19 @@ export class AppState extends Model<IAppState> {
   /*Удалить продукт из корзины */
   removeProductFromBasket(id: string): void {
     if(this.basket.has(id)) {
-      this.emitChanges('basket:changed:remove', {id});
       this.basket.delete(id);
+      this.emitChanges('basket:changed:remove', {id});
     } else {
       throw new Error('Product not found');
     }
   }
 
+  isHasProductInBasket(id: string): boolean {
+    return this.basket.has(id);
+  }
+
   get basketSize(): number {
-    return this.basket.size - 1;
+    return this.basket.size;
   }
 
   get isBasketNotEmpty(): boolean {
@@ -64,6 +77,12 @@ export class AppState extends Model<IAppState> {
       return true;
     }
     return false;
+  }
+
+  setAddressOptions(options: IAddressOptions): void {
+    this.writeAddress(options.address);
+    this.choosePaymentMethod(options.payment);
+    this.emitChanges('contacts:open');
   }
 
   /*Выбрать способ оплаты */

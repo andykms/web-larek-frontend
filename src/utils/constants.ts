@@ -42,6 +42,8 @@ export const settings = {
     templateBaseCategory: '.card__category_other',
     currency: 'синапсов',
     errorButtonText: 'К сожалению, недоступно для покупки!',
+    buttonBuyText: 'В корзину',
+    buttonDeleteText: 'Удалить из корзины',
     onClick: () => {
     }
   },
@@ -51,7 +53,7 @@ export const settings = {
     buttonClass: ".basket__button",
     totalPriceClass: ".basket__price",
     currency: 'синапсов',
-    onSubmit: ()=>{
+    onSubmit: (event: Event)=>{
 
     }
   },
@@ -81,8 +83,11 @@ export const settings = {
     buttonOffline: '.button_offline',
     activeButton: '.button_alt-active',
     addressInput: '.form__input',
-    submitButton: '.form__button',
+    submitButton: '.order__button',
     formError: '.form__errors',
+    paymentError: 'Выберете способ оплаты',
+    onSubmit: (event: Event) => {
+    }
   },
 
   contactsSettings: {

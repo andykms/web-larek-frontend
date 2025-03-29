@@ -14,7 +14,6 @@ export class Product extends View<IProductData, IProductSettings> {
     if(this.settings.onClick) {
       this.element.addEventListener('click', this.settings.onClick);
     }
-
   }
 
   setCategory(newCategoryValue: string) {

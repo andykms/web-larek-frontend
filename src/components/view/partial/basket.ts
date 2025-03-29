@@ -11,11 +11,10 @@ export class Basket extends View<IBasketData, IBasketSettings> {
 
   protected init(data: IBasketData|undefined = undefined): void {
     if(data) {
-      if(this.settings.onSubmit) {
-        this.render(this.settings.buttonClass).addEventListener('click', this.settings.onSubmit);
-      }
-    }
-    
+    } 
+    if(this.settings.onSubmit) { 
+      this.render(this.settings.buttonClass).addEventListener('click', this.settings.onSubmit);
+    }   
   }
   
   clearProducts(): void {
@@ -28,6 +27,27 @@ export class Basket extends View<IBasketData, IBasketSettings> {
       this.appendChildView(this.settings.listClass, product.render());
     });
     this.setTotalPrice();
+    this.checkErrors();
+  }
+
+  private checkErrors(): void {
+    this.checkEmptyError();
+  }
+  
+  private checkEmptyError(): void {
+    if(!(this.items.size > 0)) {
+      this.showEmptyError();
+    } else {
+      this.hideEmptyError();
+    }
+  }
+  
+  private hideEmptyError(): void {
+    this.removeAttribute(this.settings.buttonClass, 'disabled');
+  }
+
+  private showEmptyError(): void {
+    this.setValue(this.settings.buttonClass, {'disabled': 'disabled'});
   }
 
   insertProduct(cardBasketTemplate: HTMLTemplateElement, basketProductSettings: IBasketProductSettings, product: IBasketProduct): void {

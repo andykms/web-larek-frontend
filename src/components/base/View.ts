@@ -82,7 +82,14 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		newClasses.forEach((className: string) => {
 			element.classList.add(className);
 		})	
-		console.log(element.classList);
+	}
+
+	protected removeAttribute(selector: string, attribute: string) {
+		const element: HTMLElement = this.getElementFromCache(selector);
+		if(!element) {
+			throw new Error(`Element with selector ${selector} not found for remove Attribute`);
+		}
+		element.removeAttribute(attribute);
 	}
 
 	protected removeClass(selector: string, className: string) {
@@ -104,10 +111,9 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		const elementWithNewChild: HTMLElement = this.getElementFromCache(selector);
 		if(elementWithNewChild) {
 			if(!child) {
-				
 				elementWithNewChild.replaceChildren();
-			} else {
-				elementWithNewChild.removeChild(child);
+			} else if(elementWithNewChild.contains(child)) {
+					elementWithNewChild.removeChild(child);
 			}
 		}
 	}

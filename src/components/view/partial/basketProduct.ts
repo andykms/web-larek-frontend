@@ -28,18 +28,6 @@ export class BasketProductView extends View<IBasketProductData, IBasketProductSe
     this.setValue(this.settings.price, this.addCurrency(newPrice, this.settings.currency));
   }
 
-  public increasePrice(): void {
-    this.price++;
-    this.setPrice(this.price);
-  }
-
-  public decreasePrice(): void {
-    if(this.price > 0) {
-      this.price--;
-      this.setPrice(this.price);
-    }
-  }
-
   public setIndex(index: number): void {
     this.index = index;
     this.setValue(this.settings.index, index.toString());

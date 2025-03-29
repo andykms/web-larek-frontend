@@ -6,7 +6,8 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
   public price: number;
   public index: number;
   public title: string;
-  public id: string
+  public id: string;
+
   protected init(data: IProductData|undefined = undefined): void {
     if(data) {
       this.id = data.id;
@@ -20,9 +21,20 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
       this.setCategoryClass(data.category);
       this.setDescription(data.description);
     }
+  }
+
+  setupButtonListener() {
     if(this.settings.onClick) {
       this.render(this.settings.buyButton).addEventListener('click', this.settings.onClick);
     }
+  }
+
+  setButtonBuyText() {
+    this.setValue(this.settings.buyButton, this.settings.buttonBuyText);
+  }
+
+  setDeleteFromBasketButtonText() {
+    this.setValue(this.settings.buyButton, this.settings.buttonDeleteText);
   }
 
   setCategory(newCategoryValue: string) {

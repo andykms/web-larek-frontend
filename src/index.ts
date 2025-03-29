@@ -144,12 +144,24 @@ const appData = new AppState({}, events);
 
 const page = new PageView(document.body, settings.pageSettings, events);
 const modalWindow = new ModalView(modalContainer, settings.modalSettings, events);
+
+settings.basketSettings.onSubmit = () => {
+  appData.startOrder();
+};
+
 const basketView = new Basket(cloneTemplate(basketTemplate), settings.basketSettings, events);
 const orderView = new OrderForm(cloneTemplate(orderTemplate), settings.orderSettings, events);
+
+settings.orderSettings.onSubmit = (event: Event) => {
+  event.preventDefault();
+  appData.setAddressOptions(orderView.orderData);
+};
+orderView.setupListenres();
+
 const contactsView = new ContactView(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
 
 events.on('items:changed', () => {
-  page.setCatalog(Array.from(appData.products.values()).map((product) => {
+  page.setCatalog(Array.from(appData.products.values()).map((product: IProduct) => {
     settings.productSettings.onClick = () => {
       events.emit('product:selected', product);
     };
@@ -157,36 +169,61 @@ events.on('items:changed', () => {
   }))
 });
 
-events.on('product:selected', (product) => {
+events.on('product:selected', (product: IProduct) => {
   modalWindow.open();
+  const productView = new openProduct(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData);
+  
   settings.openProductSettings.onClick = () => {
-    appData.addProductToBasket(product as IProduct);
+    if(!appData.isHasProductInBasket(product.id)){
+      appData.addProductToBasket(product as IProduct);
+      productView.setDeleteFromBasketButtonText();
+    } else {
+      appData.removeProductFromBasket(product.id);
+      productView.setButtonBuyText();
+    }
+    page.setCounter(appData.basketSize);
   }; 
-  const productView = new openProduct(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData).render();
-  modalWindow.pushContent(productView);
+
+  if(!appData.isHasProductInBasket(product.id)){
+    productView.setButtonBuyText();
+  } else {
+    productView.setDeleteFromBasketButtonText();
+  }
+
+  productView.setupButtonListener();
+  modalWindow.pushContent(productView.render());
 });
 
 events.on('basket:changed:add', (product: IProduct) => {
   settings.basketProductSettings.onClick = () => {
     appData.removeProductFromBasket(product.id);
+    page.setCounter(appData.basketSize); 
   };
   basketView.insertProduct(cardBasketTemplate, settings.basketProductSettings, product);
 });
 
 events.on('basket:changed:remove', (product: IBasketProduct) => {
-  basketView.removeProduct(product.id);  
+  basketView.removeProduct(product.id); 
 });
 
 events.on("basket:open", () =>{
   modalWindow.open();
+  modalWindow.popContent();
   basketView.showProducts();
-  settings.basketSettings.onSubmit = () => {
-    if(appData.isBasketNotEmpty) {
-      events.emit("order:open");
-    }
-  };
   modalWindow.pushContent(basketView.render());
 })
+
+events.on("order:open", () => {
+  modalWindow.open();
+  modalWindow.popContent();
+  modalWindow.pushContent(orderView.render());
+});
+
+events.on("contacts:open", () => {
+  modalWindow.open();
+  modalWindow.popContent();
+  modalWindow.pushContent(contactsView.render());
+});
 
 api.getProducts().then((products) => {
   appData.loadProducts(products.items);

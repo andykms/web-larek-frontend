@@ -6,6 +6,11 @@ export interface IBasketProduct {
   price: number;
 }
 
+export interface IAddressOptions {
+  address: string;
+  payment: Payments;
+}
+
 export interface IBasket<T> {
   items: Map<number, T>;
 }
@@ -35,7 +40,8 @@ export interface IAppState {
   addProductToBasket(product: IProduct): void;
   /*Удалить продукт из корзины */
   removeProductFromBasket(id: string): void;
-
+  setAddressOptions(options: IAddressOptions): void;
+  startOrder(): void; 
   /*Выбрать способ оплаты */
   choosePaymentMethod(paymentMethod: Payments): void;
 
