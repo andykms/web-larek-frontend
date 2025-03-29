@@ -235,11 +235,11 @@
 			<div class="order">
 				<label class="order__field">
 					<span class="form__label modal__title">Email</span>
-					<input name="email" class="form__input form__email" type="text" placeholder="Введите Email" />
+					<input name="email" class="form__input form__email" type="email" placeholder="Введите Email" required/>
 				</label>
 				<label class="order__field">
 					<span class="form__label modal__title">Телефон</span>
-					<input name="phone" class="form__input form__phone" type="text" placeholder="+7 (" />
+					<input name="phone" class="form__input form__phone" type="tel" placeholder="+7 (" required pattern="^(\+?\d[\s\-\(\)]*){10,15}$" minlength="10" maxlength="15"/>
 				</label>
 			</div>
 			<div class="modal__actions">

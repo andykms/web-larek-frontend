@@ -12,5 +12,5 @@ export interface IContactsSettings {
   phoneInput: string;
   submitButton: string;
   formError: string;
-  regex: string;
+  phoneErrorText: string;
 }

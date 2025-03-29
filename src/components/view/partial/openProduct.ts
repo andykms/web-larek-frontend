@@ -52,7 +52,7 @@ export class openProduct extends View<IOpenedProductData, IOpenedProductSettings
   setPrice(newPrice: number) {
     this.setValue(this.settings.price, this.formatPrice(newPrice, this.settings.currency));
     if(!this.isPriceNumber(newPrice)) {
-      this.setValue(this.settings.buyButton, this.settings.errorButtonText);
+      this.setValue(this.settings.buyButton, this.settings.notSaleButtonText);
       this.setValue(this.settings.buyButton, {disabled: 'disabled'});
     }
   }

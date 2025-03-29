@@ -52,6 +52,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
     } else if (typeof newValue === 'string') {
       elementWithNewValue.textContent = newValue;
     } 
+	
   }
 
 	protected addClass(selector: string, className: string) {

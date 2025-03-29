@@ -16,10 +16,6 @@ export class Basket extends View<IBasketData, IBasketSettings> {
       this.render(this.settings.buttonClass).addEventListener('click', this.settings.onSubmit);
     }   
   }
-  
-  clearProducts(): void {
-    this.removeChildView(this.settings.listClass);
-  }
 
   showProducts(): void {
     this.updateIndexes();
@@ -62,6 +58,7 @@ export class Basket extends View<IBasketData, IBasketSettings> {
     this.deleteProductFromMap(productId);
     this.updateIndexes();
     this.setTotalPrice();
+    this.checkErrors();
   }
 
   private getProductFromMap(productId: string): BasketProductView {

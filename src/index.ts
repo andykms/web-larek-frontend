@@ -159,6 +159,7 @@ settings.orderSettings.onSubmit = (event: Event) => {
 orderView.setupListenres();
 
 const contactsView = new ContactView(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
+contactsView.setupListeners();
 
 events.on('items:changed', () => {
   page.setCatalog(Array.from(appData.products.values()).map((product: IProduct) => {

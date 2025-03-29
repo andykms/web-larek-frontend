@@ -24,6 +24,7 @@ export const settings = {
     onClick: () => {
     },
   },
+
   openProductSettings: {
     title: '.card__title',
     price: '.card__price',
@@ -41,12 +42,13 @@ export const settings = {
     },
     templateBaseCategory: '.card__category_other',
     currency: 'синапсов',
-    errorButtonText: 'К сожалению, недоступно для покупки!',
+    notSaleButtonText: 'К сожалению, недоступно для покупки!',
     buttonBuyText: 'В корзину',
     buttonDeleteText: 'Удалить из корзины',
     onClick: () => {
     }
   },
+
   basketSettings: {
     listClass: '.basket__list',
     totalClass: ".header__basket-counter",
@@ -54,9 +56,9 @@ export const settings = {
     totalPriceClass: ".basket__price",
     currency: 'синапсов',
     onSubmit: (event: Event)=>{
-
     }
   },
+
   basketProductSettings: {
     index: ".basket__item-index",
     title: ".card__title",
@@ -67,11 +69,13 @@ export const settings = {
     onClick: () => {
     }
   },
+
   modalSettings: {
     activeClass: 'modal_active',
     modalContent: '.modal__content',
     buttonClose: '.modal__close',
   },
+
   pageSettings: {
     basketCounterClass: '.header__basket-counter',
     catalogClass: '.gallery',
@@ -94,10 +98,10 @@ export const settings = {
     emailInput: '.form__email',
     phoneInput: '.form__phone',
     submitButton: '.contacts__button',
-    reges: '.+',
     formError: '.form__errors',
-    regex: '.+',
+    phoneErrorText: 'Введите корректный номер телефона',
   },
+
   modalSelector: '#modal-container',
   templateSuccessSelector: '#success',
   templateCardCatalogSelector: '#card-catalog',

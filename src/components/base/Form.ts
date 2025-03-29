@@ -15,39 +15,31 @@ export abstract class Form<T,S extends object> extends View<T,S> {
       inputElement.value = newValue;
     }
   
-  protected checkInputValueBySelector(selector: string): boolean {
-    if(!this.cache.has(selector)) {
-      const element: HTMLInputElement = this.element.querySelector(selector);
-      if(!element) {
-        throw new Error(`Element with selector ${selector} not found for check value`);
-      }
-      this.cache.set(selector, element);
-    }
-    const inputElement: HTMLInputElement = this.cache.get(selector) as HTMLInputElement;
-    return this.isValidInputByElement(inputElement);
+  protected isValidInputValueBySelector(selector: string): boolean {
+    const inputElement: HTMLInputElement = this.getElementFromCache(selector) as HTMLInputElement;
+    return !inputElement.validity.valid;
   }
 
   protected isValidInputByElement(inputElement: HTMLInputElement): boolean {
     return !inputElement.validity.valid;
   }
 
-  protected checkInputs(selectors: string|string[]|undefined = undefined): string|null {
-    let inputElements: Array<HTMLInputElement>;
-    if(selectors === undefined) {
-      inputElements = Array.from(this.element.querySelectorAll('input'));
-    } else if(typeof selectors === 'string') {
-      inputElements = Array.from(this.element.querySelectorAll(selectors));
-    } else if(Array.isArray(selectors)) {
-      inputElements = selectors.map((selector: string) => {
-        return this.element.querySelector(selector) as HTMLInputElement;
-      });
-    }
-    for(const inputElement of inputElements) {
-      if(this.isValidInputByElement(inputElement)) {
-        return inputElement.validationMessage;
-      }
-    }
-    return null;
+  protected isCorrectPatternInputBySelector(selector: string): boolean {
+    const inputElement: HTMLInputElement = this.getElementFromCache(selector) as HTMLInputElement;
+    return this.isCorrectPatternInputByElement(inputElement);
+  }
+
+  protected isCorrectPatternInputByElement(inputElement: HTMLInputElement): boolean {
+    return !(new RegExp(inputElement.pattern).test(inputElement.value));
+  }
+
+  protected getValidErrorBySelector(selector:string): string {
+    const inputElement: HTMLInputElement = this.getElementFromCache(selector) as HTMLInputElement;
+    return inputElement.validationMessage;
+  }
+  
+  protected getValidErrorByElement(inputElement: HTMLInputElement): string {
+    return inputElement.validationMessage;
   }
 
   protected setError(errorSelector: string, error: string, submitButtonSelector: string) {

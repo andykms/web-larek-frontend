@@ -55,16 +55,12 @@ export class OrderForm extends Form<IOrderData, IOrderSettings> {
   }
 
   protected get addressError(): string {
-    const addressError: string|null = this.checkInputs(this.settings.addressInput);
+    const addressError: string|null = this.getValidErrorBySelector(this.settings.addressInput);
     return addressError
   }
 
   protected get isAddressError(): boolean {
-    const addressError: string|null = this.checkInputs(this.settings.addressInput);
-    if(addressError === null) {
-      return false;
-    } 
-    return true;
+    return this.isValidInputValueBySelector(this.settings.addressInput);
   }
 
   protected get isPaymentError(): boolean {
