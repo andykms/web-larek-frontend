@@ -71,7 +71,6 @@ events.on('items:changed', () => {
 });
 
 events.on('product:selected', (product: IProduct) => {
-  modalWindow.open();
   const productView = new openProduct(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData);
   
   settings.openProductSettings.onClick = () => {
@@ -92,7 +91,7 @@ events.on('product:selected', (product: IProduct) => {
   }
 
   productView.setupButtonListener();
-  modalWindow.pushContent(productView.render());
+  modalWindow.initializeContent(productView.render());
 });
 
 events.on('basket:changed:add', (product: IProduct) => {

@@ -4,9 +4,14 @@ import { View } from "./View";
 import { IEvents } from "./events";
 
 export class ModalView extends View<Modal, ModalSettings> implements Modal {
+  options = {
+    rootMargin: `0px 0px ${this.render().getBoundingClientRect().width}px 0px`,
+    threshold: [0,1],
+  };
+  observer: IntersectionObserver = new IntersectionObserver(this.blockScroll.bind(this), this.options);
+
   init() {
     const deleteButton = this.getElementFromCache(this.settings.buttonClose);
-
     deleteButton.addEventListener('click',this.close.bind(this));
 	}
 
@@ -18,16 +23,18 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
 
   open(): void {
     this.fixPosition();
+    this.configureScroll();
     this.element.classList.add(this.settings.activeClass);
   };
 
   close(): void {
+    this.unblockScroll();
     this.element.classList.remove(this.settings.activeClass);
     this.popContent();
   };
 
   pushContent(content: HTMLElement): void {
-      this.appendChildView(this.settings.modalContent, content);
+    this.appendChildView(this.settings.modalContent, content);
   }
 
   popContent(): void {
@@ -37,5 +44,18 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
   fixPosition(): void {
     const scrollY = window.scrollY;
     this.render().style.top = `${scrollY}px`;
+  }
+
+  configureScroll(): void {
+    this.observer.observe(this.element);
+  }
+
+  blockScroll(): void {
+    document.body.style.overflow = 'hidden';
+  }
+
+  unblockScroll(): void {
+    document.body.style.overflow = '';
+    this.observer.disconnect();
   }
 } 

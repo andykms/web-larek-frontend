@@ -55,6 +55,20 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 	
   }
 
+	protected getElementDimensions(element: HTMLElement): string {
+		// Получаем вычисленные стили
+		const styles = window.getComputedStyle(element);
+		
+		// Извлекаем нужные значения
+		const paddingTop = parseFloat(styles.paddingTop);
+		const paddingRight = parseFloat(styles.paddingRight);
+		const paddingBottom = parseFloat(styles.paddingBottom);
+		const paddingLeft = parseFloat(styles.paddingLeft);
+		
+		// Форматируем в строку
+		return `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`;
+	}
+
 	protected addClass(selector: string, className: string) {
 		const element: HTMLElement = this.getElementFromCache(selector);
 		if(!element) {
