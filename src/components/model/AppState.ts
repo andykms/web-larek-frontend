@@ -9,13 +9,14 @@ import { IAddressOptions, IContactsOptions } from "../../types/components/model/
 export class AppState extends Model<IAppState> implements IAppState{
 
   products: Map<string, IProduct> = new Map<string, IProduct>();
-  selectedProducts: string[] | null = null;
+  selectedProduct: IProduct = null;
   basket: Map<string, IBasketProduct> = new Map<string, IBasketProduct>();
   order: IOrder = {
     payment: Payments.online,
     email: '',
     phone: '',
     address: '',
+    total: 0,
     items: []
   };
 
@@ -37,23 +38,30 @@ export class AppState extends Model<IAppState> implements IAppState{
   }
 
   packedOrderItems(): void {
-    const rawItems: IBasketProduct[] = Array.from(this.basket.values());
-    const setItems: Set<string> = new Set();
-    this.order.items.forEach((item) => {
-      setItems.add(item);
+    const basketItems: IBasketProduct[] = Array.from(this.basket.values());
+    basketItems.forEach((product) => {
+      this.order.items.push(product.id);
     });
-    rawItems.forEach((product) => {
-      setItems.add(product.id);
-    });
-    this.order.items = Array.from(setItems);
   }
 
-  /*Выбрать определенный продукт */
-  selectProduct(id: string): void {
-    this.selectedProducts.push(id);
+  setTotalIntoOrder(): void {
+    this.order.total = this.getTotalPrice();
   }
 
-  /*Добавить продукт в корзину  *//* */
+  getTotalPrice(): number {
+    let total = 0;
+    const basketItems: IBasketProduct[] = Array.from(this.basket.values());
+    basketItems.forEach((product) => {
+      total += product.price;
+    });
+    return total;
+  }
+
+  selectProduct(product: IProduct): void {
+    this.selectedProduct = product;
+    this.events.emit('product:selected', this.selectedProduct);
+  }
+
   addProductToBasket(product: IProduct): void {
     this.basket.set(product.id, {
       id: product.id,
@@ -63,7 +71,6 @@ export class AppState extends Model<IAppState> implements IAppState{
     this.emitChanges('basket:changed:add', product);
   }
 
-  /*Удалить продукт из корзины */
   removeProductFromBasket(id: string): void {
     if(this.basket.has(id)) {
       this.basket.delete(id);
@@ -108,7 +115,6 @@ export class AppState extends Model<IAppState> implements IAppState{
     return this.order.payment !== Payments.none;
   }
 
-  /*Заполнить адрес */
   writeAddress(address: string): void {
     this.order.address = address;
   }
@@ -117,7 +123,6 @@ export class AppState extends Model<IAppState> implements IAppState{
     return this.order.address.length > 0;
   }
 
-  /*Заполнить email */
   writeEmail(email: string): void {
     this.order.email = email;
   }
@@ -126,7 +131,6 @@ export class AppState extends Model<IAppState> implements IAppState{
     return this.order.email.length > 0;
   }
 
-  /*Заполнить телефон */
   writePhone(phone: string): void {
     this.order.phone = phone;
   }
@@ -138,6 +142,7 @@ export class AppState extends Model<IAppState> implements IAppState{
   /*Отправить заказ */
   submitOrder(): void {
     this.packedOrderItems();
+    this.setTotalIntoOrder();
     this.emitChanges('order:all:packed', this.order);
   }
 
@@ -153,11 +158,14 @@ export class AppState extends Model<IAppState> implements IAppState{
       email: '',
       phone: '',
       address: '',
+      total: 0,
       items: []
     };
   }
 
   clearBasket(): void {
-    this.basket.clear();
+    Array.from(this.basket.values()).forEach((product) => {
+      this.removeProductFromBasket(product.id);
+    });
   }
 } 

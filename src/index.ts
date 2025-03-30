@@ -15,7 +15,7 @@ import { OrderForm } from './components/view/partial/order';
 import { ContactView } from './components/view/partial/contacts';
 import { IOpenedProductData } from './types/components/view/partial/openProduct';
 import { IBasketProduct } from './types/components/model/AppState';
-
+import { Success } from './components/view/additional/success';
 
 let modal: HTMLElement = document.querySelector('.modal_active');
 modal.classList.remove('modal_active');
@@ -61,10 +61,17 @@ settings.contactsSettings.onSubmit = (event: Event) => {
 };
 contactsView.setupListeners();
 
+settings.successSettings.onSubmit = (event: Event) => {
+  event.preventDefault();
+  modalWindow.close();
+};
+
+const successView = new Success(cloneTemplate(successTemplate), settings.successSettings, events);
+
 events.on('items:changed', () => {
   page.setCatalog(Array.from(appData.products.values()).map((product: IProduct) => {
     settings.productSettings.onClick = () => {
-      events.emit('product:selected', product);
+      appData.selectProduct(product);
     };
     return new Product(cloneTemplate(cardCatalogTemplate), settings.productSettings,events, product).render();
   }))
@@ -81,7 +88,6 @@ events.on('product:selected', (product: IProduct) => {
       appData.removeProductFromBasket(product.id);
       productView.setButtonBuyText();
     }
-    page.setCounter(appData.basketSize);
   }; 
 
   if(!appData.isHasProductInBasket(product.id)){
@@ -97,13 +103,16 @@ events.on('product:selected', (product: IProduct) => {
 events.on('basket:changed:add', (product: IProduct) => {
   settings.basketProductSettings.onClick = () => {
     appData.removeProductFromBasket(product.id);
-    page.setCounter(appData.basketSize); 
   };
   basketView.insertProduct(cardBasketTemplate, settings.basketProductSettings, product);
 });
 
 events.on('basket:changed:remove', (product: IBasketProduct) => {
   basketView.removeProduct(product.id); 
+});
+
+events.on(new RegExp("basket:changed:.*"), () => {
+  page.setCounter(appData.basketSize);
 });
 
 events.on("basket:open", () =>{
@@ -128,6 +137,7 @@ events.on("order:all:packed", (order: IOrder) => {
   api.postOrder(order)
     .then((response) => {
       appData.successOrder();
+      console.log(response);
     })
     .catch((error) => {
       console.log(error);
@@ -135,9 +145,14 @@ events.on("order:all:packed", (order: IOrder) => {
 });
 
 events.on("order:success", () => {
-  modalWindow.initializeContent(successTemplate);
+  successView.setTotalPrice(appData.getTotalPrice());
+  modalWindow.initializeContent(successView.render());
 });
 
-api.getProducts(true).then((products) => {
+events.on("basket:changed:clear", () => {
+  basketView.clearProducts();
+});
+
+api.getProducts().then((products) => {
   appData.loadProducts(products.items);
 });

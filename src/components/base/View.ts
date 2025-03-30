@@ -17,8 +17,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 			Object.assign({}, this.settings, settings ?? {})
 		);
 	}
-
-
+	
 	protected init(value: T) {}
 
 	render(selector: string|undefined = undefined): HTMLElement {
@@ -55,20 +54,6 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 	
   }
 
-	protected getElementDimensions(element: HTMLElement): string {
-		// Получаем вычисленные стили
-		const styles = window.getComputedStyle(element);
-		
-		// Извлекаем нужные значения
-		const paddingTop = parseFloat(styles.paddingTop);
-		const paddingRight = parseFloat(styles.paddingRight);
-		const paddingBottom = parseFloat(styles.paddingBottom);
-		const paddingLeft = parseFloat(styles.paddingLeft);
-		
-		// Форматируем в строку
-		return `${paddingTop}px ${paddingRight}px ${paddingBottom}px ${paddingLeft}px`;
-	}
-
 	protected addClass(selector: string, className: string) {
 		const element: HTMLElement = this.getElementFromCache(selector);
 		if(!element) {
@@ -77,9 +62,6 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 		element.classList.add(className);
 	}
 
-	/*Метод для замены классов.
-	Если подается один удаляемый класс - он заменяется на новые классы
-	Если несколько удаляемых - они заменяются на новые классы */
 	protected toggleClass(selector: string, deletedClass: string|string[], newClasses: string|string[]) {
 		const element: HTMLElement = this.element.querySelector(selector);
 		if(!element) {

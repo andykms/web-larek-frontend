@@ -9,12 +9,17 @@ import { cloneTemplate } from "../../../utils/utils";
 export class Basket extends View<IBasketData, IBasketSettings> {
   private items: Map<string, BasketProductView> = new Map<string, BasketProductView>();
 
-  protected init(data: IBasketData|undefined = undefined): void {
-    if(data) {
-    } 
+  protected init(): void {
     if(this.settings.onSubmit) { 
       this.render(this.settings.buttonClass).addEventListener('click', this.settings.onSubmit);
     }   
+  }
+
+  clearProducts(): void {
+    Array.from(this.items.values()).forEach((product) => {
+      this.removeChildView(this.settings.listClass, product.render());
+    });
+    this.items.clear();
   }
 
   showProducts(): void {

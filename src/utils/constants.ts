@@ -103,6 +103,14 @@ export const settings = {
     onSubmit: (event: Event) => {
     }
   },
+  successSettings: {
+    totalClass: '.order-success__description',
+    submitButton: '.order-success__close',
+    additionalMessage: 'Списано',
+    currency: 'синапсов',
+    onSubmit: (event: Event) => {
+    }
+  },
 
   modalSelector: '#modal-container',
   templateSuccessSelector: '#success',

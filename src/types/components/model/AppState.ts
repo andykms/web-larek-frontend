@@ -22,13 +22,15 @@ export interface IBasket<T> {
 
 export interface IAppState {
   products: Map<string, IProduct>;
-  selectedProducts: string[] | null;
+  selectedProduct: IProduct | null;
   basketTotal: number;
   basket: Map<string, IBasketProduct>;
   order: IOrder;
   packedOrderItems(): void;
+  setTotalIntoOrder(): void;
+  getTotalPrice(): number;
   loadProducts(items: IProduct[]): void;
-  selectProduct(id: string): void;
+  selectProduct(product: IProduct): void;
   addProductToBasket(product: IProduct): void;
   removeProductFromBasket(id: string): void;
   setAddressOptions(options: IAddressOptions): void;
