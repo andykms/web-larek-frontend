@@ -5,7 +5,6 @@ export interface Modal {
   close(): void;
   pushContent(content:HTMLElement): void;
   popContent(): void;
-  toggleContent(newContent: HTMLElement): void;
 }
 
 export interface ModalSettings {

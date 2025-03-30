@@ -1,7 +1,7 @@
 import { View } from "../../base/View";
 import { IContactsData, IContactsSettings } from "../../../types/components/view/partial/contacts";
 import { Form } from "../../base/Form";
-
+import { IContactsOptions } from "../../../types/components/model/AppState";
 
 export class ContactView extends Form<IContactsData, IContactsSettings> {
   
@@ -15,6 +15,7 @@ export class ContactView extends Form<IContactsData, IContactsSettings> {
 
   setupListeners() {
     this.checkErrors();
+    this.render(this.settings.submitButton).addEventListener('click', this.settings.onSubmit);
     this.render(this.settings.emailInput).addEventListener('input', this.checkErrors.bind(this));
     this.render(this.settings.phoneInput).addEventListener('input', this.checkErrors.bind(this));
   }
@@ -32,6 +33,7 @@ export class ContactView extends Form<IContactsData, IContactsSettings> {
     }
     return true;
   }
+
   checkErrors() {
     let error: string = '';
     let isError = false;
@@ -58,4 +60,10 @@ export class ContactView extends Form<IContactsData, IContactsSettings> {
     this.setInputValue(this.settings.phoneInput, phone);
   }
 
+  get contactsData(): IContactsOptions {
+    return {
+      email: this.getInputValue(this.settings.emailInput),
+      phone: this.getInputValue(this.settings.phoneInput)
+    }
+  }
 }

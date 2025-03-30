@@ -10,16 +10,20 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
     deleteButton.addEventListener('click',this.close.bind(this));
 	}
 
-  open(content: HTMLElement|undefined = undefined): void {
+  initializeContent(content: HTMLElement): void {
+    this.open();
+    this.popContent();
+    this.pushContent(content);
+  }
+
+  open(): void {
+    this.fixPosition();
     this.element.classList.add(this.settings.activeClass);
-    if(content) {
-      this.pushContent(content);
-    }
   };
+
   close(): void {
     this.element.classList.remove(this.settings.activeClass);
     this.popContent();
-    this.events.emit('modal:close');
   };
 
   pushContent(content: HTMLElement): void {
@@ -30,8 +34,8 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
     this.removeChildView(this.settings.modalContent);
   }
 
-  toggleContent(newContent: HTMLElement): void {
-      this.popContent();
-      this.pushContent(newContent);
+  fixPosition(): void {
+    const scrollY = window.scrollY;
+    this.render().style.top = `${scrollY}px`;
   }
 } 

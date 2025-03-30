@@ -1,13 +1,12 @@
 import { IProduct, IProductList } from "../../types/components/model/API";
-import { AppStateModals, IAppState, IBasketProduct, Payments } from "../../types/components/model/AppState";
+import { IAppState, IBasketProduct, Payments } from "../../types/components/model/AppState";
 import { IOrder, IOrderResponse } from "../../types/components/model/API";
 import { IAPI } from "../../types/components/model/API";
 import { Api } from "../base/api";
 import { Model } from "../base/Model";
-import { IAddressOptions } from "../../types/components/model/AppState";
+import { IAddressOptions, IContactsOptions } from "../../types/components/model/AppState";
 
-
-export class AppState extends Model<IAppState> {
+export class AppState extends Model<IAppState> implements IAppState{
 
   products: Map<string, IProduct> = new Map<string, IProduct>();
   selectedProducts: string[] | null = null;
@@ -19,8 +18,6 @@ export class AppState extends Model<IAppState> {
     address: '',
     items: []
   };
-  isOrderReady: boolean = false;
-  openedModal: AppStateModals = AppStateModals.main;
 
   get basketTotal(): number {
     return Array.from(this.basket.values()).reduce((total, product) => total + 1, 0);
@@ -39,12 +36,24 @@ export class AppState extends Model<IAppState> {
     }
   }
 
+  packedOrderItems(): void {
+    const rawItems: IBasketProduct[] = Array.from(this.basket.values());
+    const setItems: Set<string> = new Set();
+    this.order.items.forEach((item) => {
+      setItems.add(item);
+    });
+    rawItems.forEach((product) => {
+      setItems.add(product.id);
+    });
+    this.order.items = Array.from(setItems);
+  }
+
   /*Выбрать определенный продукт */
   selectProduct(id: string): void {
     this.selectedProducts.push(id);
   }
 
-  /*Добавить продукт в корзину  */
+  /*Добавить продукт в корзину  *//* */
   addProductToBasket(product: IProduct): void {
     this.basket.set(product.id, {
       id: product.id,
@@ -85,9 +94,18 @@ export class AppState extends Model<IAppState> {
     this.emitChanges('contacts:open');
   }
 
-  /*Выбрать способ оплаты */
+  setContactsOptions(options: IContactsOptions): void {
+      this.writeEmail(options.email);
+      this.writePhone(options.phone);
+      this.emitChanges('order:all');
+  }
+
   choosePaymentMethod(paymentMethod: Payments): void {
     this.order.payment = paymentMethod;
+  }
+
+  isValidPaymentMethod(): boolean {
+    return this.order.payment !== Payments.none;
   }
 
   /*Заполнить адрес */
@@ -119,22 +137,27 @@ export class AppState extends Model<IAppState> {
 
   /*Отправить заказ */
   submitOrder(): void {
-    this.emitChanges('order:submitted', {order: this.order});
+    this.packedOrderItems();
+    this.emitChanges('order:all:packed', this.order);
   }
 
-  /*Открыть модальное окно */
-  openModal(modal: AppStateModals): void {
-    this.openedModal = modal;
-    this.emitChanges('modal:open', {modal: this.openedModal});
-  }
-  /*Закрыть модальное окно */
-  closeModal(modal: AppStateModals): void {
-    this.openedModal = AppStateModals.main;
-    this.emitChanges('modal:close', {modal: this.openedModal});
+  successOrder(): void {
+    this.emitChanges('order:success');
+    this.clearOrder();
+    this.clearBasket();
   }
 
-  /*Установить сообщение */
-  setMessage(message: string | null, isError: boolean): void {
-    
+  clearOrder(): void {
+    this.order = {
+      payment: Payments.none,
+      email: '',
+      phone: '',
+      address: '',
+      items: []
+    };
+  }
+
+  clearBasket(): void {
+    this.basket.clear();
   }
 } 

@@ -100,6 +100,8 @@ export const settings = {
     submitButton: '.contacts__button',
     formError: '.form__errors',
     phoneErrorText: 'Введите корректный номер телефона',
+    onSubmit: (event: Event) => {
+    }
   },
 
   modalSelector: '#modal-container',

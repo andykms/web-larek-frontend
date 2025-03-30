@@ -6,6 +6,11 @@ export interface IBasketProduct {
   price: number;
 }
 
+export interface IContactsOptions {
+  email: string;
+  phone: string;
+}
+
 export interface IAddressOptions {
   address: string;
   payment: Payments;
@@ -16,66 +21,30 @@ export interface IBasket<T> {
 }
 
 export interface IAppState {
-  /*Товары */
   products: Map<string, IProduct>;
-  /*Выбранный товар */ 
   selectedProducts: string[] | null;
-  
-  /*Количество товаров в корзине */
   basketTotal: number;
-  /*Корзина */
   basket: Map<string, IBasketProduct>;
-  /*Заказ */
   order: IOrder;
-  /*Заказ готов к отправке */
-  isOrderReady: boolean;
-
-  openedModal: AppStateModals;
-
-  /*Загрузить продукты */
+  packedOrderItems(): void;
   loadProducts(items: IProduct[]): void;
-  /*Выбрать определенный продукт */
   selectProduct(id: string): void;
-  /*Добавить продукт в корзину  */
   addProductToBasket(product: IProduct): void;
-  /*Удалить продукт из корзины */
   removeProductFromBasket(id: string): void;
   setAddressOptions(options: IAddressOptions): void;
+  setContactsOptions(options: IContactsOptions): void;
   startOrder(): void; 
-  /*Выбрать способ оплаты */
   choosePaymentMethod(paymentMethod: Payments): void;
-
-  /*Заполнить адрес */
+  isValidPaymentMethod(): boolean;
   writeAddress(address: string): void;
   isValidAddress(): boolean;
-
-  /*Заполнить email */
   writeEmail(email: string): void;
   isValidEmail(): boolean;
-
-  /*Заполнить телефон */
   writePhone(phone: string): void;
   isValidPhone(): boolean;
-
-  /*Отправить заказ */
   submitOrder(): void;
-
-  /*Открыть модальное окно */
-  openModal(modal: AppStateModals): void;
-  /*Закрыть модальное окно */
-  closeModal(modal: AppStateModals): void;
-
-  /*Установить сообщение */
-  setMessage(message: string | null, isError: boolean): void;
-}
-
-export enum AppStateModals {
-  main = 'main',
-  basket = 'basket',
-  product = 'product',
-  address = 'address',
-  contacts = 'contacts',
-  sucsess = 'sucsess'
+  clearOrder(): void;
+  clearBasket(): void;
 }
 
 export enum Payments {

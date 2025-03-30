@@ -1,13 +1,13 @@
 /*<template id="contacts">*/
 
-import { IClickable } from "../../base/View";
+import { IClickable, ISubmit } from "../../base/View";
 
 export interface IContactsData {
   email: string;
   phone: string;
 }
 
-export interface IContactsSettings {
+export interface IContactsSettings extends ISubmit{
   emailInput: string;
   phoneInput: string;
   submitButton: string;
