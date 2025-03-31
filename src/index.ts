@@ -12,7 +12,7 @@ import { IOrder, IProduct } from './types/components/model/API';
 import { ensureElement, cloneTemplate } from './utils/utils';
 import { PageView } from './components/view/partial/Page';
 import { OrderForm } from './components/view/partial/order';
-import { ContactView } from './components/view/partial/contacts';
+import { ContactForm } from './components/view/partial/contacts';
 import { IOpenedProductData } from './types/components/view/partial/openProduct';
 import { IBasketProduct } from './types/components/model/AppState';
 import { Success } from './components/view/additional/success';
@@ -54,7 +54,7 @@ settings.orderSettings.onSubmit = (event: Event) => {
 };
 orderView.setupListenres();
 
-const contactsView = new ContactView(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
+const contactsView = new ContactForm(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
 settings.contactsSettings.onSubmit = (event: Event) => {
   event.preventDefault();
   appData.setContactsOptions(contactsView.contactsData);

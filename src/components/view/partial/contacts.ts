@@ -3,7 +3,7 @@ import { IContactsData, IContactsSettings } from "../../../types/components/view
 import { Form } from "../../base/Form";
 import { IContactsOptions } from "../../../types/components/model/AppState";
 
-export class ContactView extends Form<IContactsData, IContactsSettings> {
+export class ContactForm extends Form<IContactsData, IContactsSettings> {
   
   init(data: IContactsData|undefined = undefined) {
     if(data === undefined) {
