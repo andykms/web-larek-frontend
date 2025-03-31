@@ -41,20 +41,20 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
     this.removeChildView(this.settings.modalContent);
   }
 
-  fixPosition(): void {
+  private fixPosition(): void {
     const scrollY = window.scrollY;
     this.render().style.top = `${scrollY}px`;
   }
 
-  configureScroll(): void {
+  private configureScroll(): void {
     this.observer.observe(this.element);
   }
 
-  blockScroll(): void {
+  private blockScroll(): void {
     document.body.style.overflow = 'hidden';
   }
 
-  unblockScroll(): void {
+  private unblockScroll(): void {
     document.body.style.overflow = '';
     this.observer.disconnect();
   }

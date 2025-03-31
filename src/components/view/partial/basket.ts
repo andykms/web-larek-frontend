@@ -2,7 +2,6 @@ import { IBasketData, IBasketSettings } from "../../../types/components/view/par
 import { View } from "../../base/View";
 import { IBasketProduct } from "../../../types/components/model/AppState";
 import { BasketProductView } from "./basketProduct";
-import { ListWithIndexes } from "../../base/List";
 import { IBasketProductSettings } from "../../../types/components/view/partial/basketProduct";
 import { cloneTemplate } from "../../../utils/utils";
 
