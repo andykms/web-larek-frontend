@@ -166,7 +166,8 @@ class Product extends View<IProductData, IProductSettings>
 13.	getInputValue(selector: string): string
 ```
 Принимает селектор элемента input и возвращает значение, которое введено в данный input. Используется почти во всех методах Form.
-**Класс class ModalView extends View<Modal, ModalSettings> implements Modal 
+
+**Класс class ModalView extends View<Modal, ModalSettings> implements Modal**
 Класс представления модальных окон, расширяется от базового представления и реализует интерфейс Modal, требующий методы для открытия, закрытия, вставки контента и удаления контента.
 Класс не является самым базовым, но может быть использован и в других проектах.
 Методы:
