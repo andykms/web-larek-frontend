@@ -55,10 +55,6 @@ export abstract class Form<T,S extends object> extends View<T,S> {
   protected setInputError(errorSelector: string, error: string) {
     this.setValue(errorSelector, error);
   }
-
-  protected clearInputError(errorSelector: string) {
-    this.setValue(errorSelector, '');
-  }
   
   protected deactivateButton(buttonSelector: string) {
     this.setValue(buttonSelector, {'disabled': 'disabled'});
@@ -69,14 +65,7 @@ export abstract class Form<T,S extends object> extends View<T,S> {
   }
 
   protected getInputValue(selector: string): string {
-    if(!this.cache.has(selector)) {
-      const element: HTMLInputElement = this.element.querySelector(selector);
-      if(!element) {
-        throw new Error(`Element with selector ${selector} not found for get value`);
-      }
-      this.cache.set(selector, element);
-    }
-    const inputElement: HTMLInputElement = this.cache.get(selector) as HTMLInputElement;
+    const inputElement: HTMLInputElement = this.getElementFromCache(selector) as HTMLInputElement;
     return inputElement.value;
   }
 }

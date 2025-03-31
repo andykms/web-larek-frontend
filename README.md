@@ -40,8 +40,8 @@ npm run build
 ```
 yarn build
 ```
-##Базовый код
-###Абстрактный класс View<T, S extends Object>
+**Базовый код**
+**Абстрактный класс View<T, S extends Object>**
 Реализует базовый абстрактный класс отображений. Все отображения наследуются прямо, либо через родственные ему классы.
 Вот пример использования класса для реализации класса отображения товара.
 ```
@@ -78,7 +78,7 @@ class Product extends View<IProductData, IProductSettings>
 принимает необязательный аргумент селектор класса, при его отсутствии возвращает корневой элемент отображения, при селекторе – возвращает элемент по данному селектору
 ```
 3.	getElementFromCache(selector: string): HTMLElement
-`` `
+```
 принимает обязательный аргумент селектор класса. Ищет элемент в кэше (хэш-таблице) по селектору. При его отсутствии в кэше, находит элемент в DOM и записывает в кэш. Возвращает элемент с переданным в метод селектором.
 ```
 4.	setValue(selector: string, newValue: string|attributeValues) 
@@ -109,8 +109,9 @@ class Product extends View<IProductData, IProductSettings>
 ```
 метод, противоположный appendChildView – удаляет потомка. Если потомок не найдется в элементе, удаление не произойдет
 
-###Абстрактный класс Form<T,S extends object> extends View<T,S>
+**Абстрактный класс Form<T,S extends object> extends View<T,S>**
 Расширяет базовое представление методами для форм. Не изменяет родительские методы, в том числе конструктор. Дополнительных полей нет – предполагается что элементы форм, например теги ```input``` будут вводится в сами методы. 
+Представления, имеющие поля формы – наследуются от данного класса.
 Методы:
 ```
 1.	setInputValue(selector: string, newValue: string)
@@ -119,4 +120,49 @@ class Product extends View<IProductData, IProductSettings>
 ```
 2.	isValidInputValueBySelector(selector: string): boolean
 ```
-Принимает селектор элемента Input. При валидном ```input``` элемента возвращает ```true```
+Принимает селектор элемента Input. При валидном input элемента возвращает true, иначе false
+```
+3.	isValidInputByElement(inputElement: HTMLInputElement): boolean
+```
+Такая же логика как и у isValidInputValueBySelector, но вместо селектора принимает сам элемент input.
+```
+4.	isCorrectPatternInputBySelector(selector: string): boolean
+```
+Принимает селектор элемента Input. Если в теге есть атрибут pattern, возвращает true, если значение в input соответствует паттерну, иначе false.
+Важно, реализация метода учитывает пустое значение input, в отличие от простой проверки свойства .validity.pattern. Поэтому, к примеру, если в значении пусто, а паттерн требует хотя бы больше одного символа, методы выдаст false, а не true.
+```
+5.	isCorrectPatternInputByElement(inputElement: HTMLInputElement): boolean 
+```
+Такая же логика как и у isCorrectPatternInputBySelector, но принимает вместо селектора сам элемент.
+```
+6.	getValidErrorBySelector(selector:string): string
+```
+Принимает селектор элемента input. Возвращает ошибку валидации.
+```
+7.	getValidErrorByElement(inputElement: HTMLInputElement): string
+```
+Такая логика как getValidErrorBySelector, но принимает сам элемент input.
+```
+8.	setError (errorSelector: string, error: string, submitButtonSelector: string)
+```
+Принимает селектор элемента, куда нужно вставить ошибку валидации формы (<span>, <p> и т.п.), текст ошибки, который будет вставлен в свойство textContent элемента с селектором ошибки и элемент кнопки формы, которая будет деактивирована. 
+```
+9.	setSuccess(successSelector: string, success: string, submitButtonSelector: string)
+```
+Имеет примерно ту же логику метода setError, но используется вывода не ошибки, а сообщения, что форма верна (на практике в success передают пустую строку). Вместо деактивации кнопки – активирует её.
+```
+10.	setInputError(errorSelector: string, error: string)
+```
+Принимает селектор элемента, куда будет вставлен текст ошибки и саму ошибку. Используется в методе setError.
+```
+11.	deactivateButton(buttonSelector: string)
+```
+Принимает селектор элемента кнопки и деактивирует её.
+```
+12.	activateButton(buttonSelector: string)
+```
+Принимает селектор элемента кнопки и активирует её.
+```
+13.	getInputValue(selector: string): string
+```
+Принимает селектор элемента input и возвращает значение, которое введено в данный input. Используется почти во всех методах Form.
