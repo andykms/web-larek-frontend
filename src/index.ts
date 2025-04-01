@@ -15,7 +15,7 @@ import { OrderForm } from './components/view/partial/order';
 import { ContactForm } from './components/view/partial/contacts';
 import { IOpenedProductData } from './types/components/view/partial/openProduct';
 import { IBasketProduct } from './types/components/model/AppState';
-import { Success } from './components/view/additional/success';
+import { Success } from './components/view/partial/success';
 
 let modal: HTMLElement = document.querySelector('.modal_active');
 modal.classList.remove('modal_active');

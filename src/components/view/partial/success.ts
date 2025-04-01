@@ -1,5 +1,5 @@
 import { View } from "../../base/View";
-import { ISuccessData, ISuccessSettings } from "../../../types/components/view/additional/success";
+import { ISuccessData, ISuccessSettings } from "../../../types/components/view/partial/success";
 export class Success extends View<ISuccessData, ISuccessSettings> {
   init(data: ISuccessData|undefined = undefined): void{
     if(data){
