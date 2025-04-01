@@ -11,8 +11,8 @@ export class ProductApi extends Api implements IAPI {
     super(API_URL);
   }
 
-  getProducts(test: boolean|undefined = undefined): Promise<IProductList<IProduct>> {
-    if(!test) {
+  getProducts(serverIsSmokeBreak: boolean|undefined = undefined): Promise<IProductList<IProduct>> {
+    if(!serverIsSmokeBreak) {
       return (this.get(this.productUrl) as Promise<IProductList<IProduct>>)
               .then((products)=>{
                 return this.formatProducts(products);

@@ -16,6 +16,8 @@ import { ContactView } from './components/view/partial/contacts';
 import { IOpenedProductData } from './types/components/view/partial/openProduct';
 import { IBasketProduct } from './types/components/model/AppState';
 import { SuccessView } from './components/view/partial/success';
+import { BasketProductView } from './components/view/partial/basketProduct';
+
 
 let modal: HTMLElement = document.querySelector('.modal_active');
 modal.classList.remove('modal_active');
@@ -102,7 +104,8 @@ events.on('basket:changed:add', (product: IProduct) => {
   settings.basketProductSettings.onClick = () => {
     appData.removeProductFromBasket(product.id);
   };
-  basketView.insertProduct(cardBasketTemplate, settings.basketProductSettings, product);
+  const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), settings.basketProductSettings, events, product);
+  basketView.insertProduct(basketProduct);
 });
 
 events.on('basket:changed:remove', (product: IBasketProduct) => {

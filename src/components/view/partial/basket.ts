@@ -4,9 +4,11 @@ import { IBasketProduct } from "../../../types/components/model/AppState";
 import { BasketProductView } from "./basketProduct";
 import { IBasketProductSettings } from "../../../types/components/view/partial/basketProduct";
 import { cloneTemplate } from "../../../utils/utils";
+import { addCurrency } from "../../../utils/utils";
+import { IBasketItem } from "../../../types/components/view/partial/basket";
 
-export class BasketView extends View<IBasketData, IBasketSettings> {
-  private items: Map<string, BasketProductView> = new Map<string, BasketProductView>();
+export class BasketView<T, S extends Object> extends View<IBasketData, IBasketSettings> {
+  private items: Map<string, IBasketItem<T, S>> = new Map<string, IBasketItem<T, S>>();
 
   protected init(): void {
     if(this.settings.onSubmit) { 
@@ -16,7 +18,7 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
 
   clearProducts(): void {
     Array.from(this.items.values()).forEach((product) => {
-      this.removeChildView(this.settings.listClass, product.render());
+      this.removeChildView(this.settings.listClass, product.render(undefined));
     });
     this.items.clear();
   }
@@ -24,7 +26,7 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
   showProducts(): void {
     this.updateIndexes();
     Array.from(this.items.values()).forEach((product) => {
-      this.appendChildView(this.settings.listClass, product.render());
+      this.appendChildView(this.settings.listClass, product.render(undefined));
     });
     this.setTotalPrice();
     this.checkErrors();
@@ -50,10 +52,9 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
     this.setValue(this.settings.buttonClass, {'disabled': 'disabled'});
   }
 
-  insertProduct(cardBasketTemplate: HTMLTemplateElement, basketProductSettings: IBasketProductSettings, product: IBasketProduct): void {
-    const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), basketProductSettings, this.events, product);
-    basketProduct.setIndex(this.items.size + 1);
-    this.items.set(product.id, basketProduct);
+  insertProduct(newProduct: IBasketItem<T, S>): void {
+    newProduct.setIndex(this.items.size + 1);
+    this.items.set(newProduct.id, newProduct);
   }
 
   removeProduct(productId: string) {
@@ -65,7 +66,7 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
     this.checkErrors();
   }
 
-  private getProductFromMap(productId: string): BasketProductView {
+  private getProductFromMap(productId: string): IBasketItem<T, S> {
     if(this.items.has(productId)) {
       return this.items.get(productId);
     } else {
@@ -75,14 +76,14 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
 
   private get totalPrice(): number {
     let total = 0;
-    Array.from(this.items.values()).forEach((product: BasketProductView)=>{
+    Array.from(this.items.values()).forEach((product: IBasketItem<T, S>)=>{
       total += product.price;
     })
     return total
   }
 
   private setTotalPrice(): void {
-    this.setValue(this.settings.totalPriceClass, this.addCurrency(this.totalPrice, this.settings.currency))
+    this.setValue(this.settings.totalPriceClass, addCurrency(this.totalPrice, this.settings.currency))
   }
 
   private deleteProductFromMap(productId: string) {
@@ -93,8 +94,8 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
     }
   }
 
-  private removeProductView(product: BasketProductView): void {
-    this.removeChildView(this.settings.listClass, product.render());
+  private removeProductView(product: IBasketItem<T, S>): void {
+    this.removeChildView(this.settings.listClass, product.render(undefined));
   }
 
   updateTotalBasket(total: number|string): void {
@@ -107,11 +108,7 @@ export class BasketView extends View<IBasketData, IBasketSettings> {
     });
   }
 
-  getProducts(): BasketProductView[] {
+  getProducts(): IBasketItem<T, S>[] {
     return Array.from(this.items.values());
-  } 
-
-  private addCurrency(price: number, currency: string): string {
-    return `${price} ${currency}`;
   }
 }
