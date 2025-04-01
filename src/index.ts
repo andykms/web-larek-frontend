@@ -24,7 +24,7 @@ modal = document.querySelector('.modal');
 
 export const events = new EventEmitter();
 const api = new ProductApi(API_URL, CDN_URL);
-
+const appData = new AppState({}, events);
 
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>(settings.templateCardCatalogSelector);
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>(settings.templateCardPreviewSelector);
@@ -35,8 +35,6 @@ const orderTemplate = ensureElement<HTMLTemplateElement>(settings.templateOrderS
 const contactsTemplate = ensureElement<HTMLTemplateElement>(settings.templateContactsSelector);
 
 const modalContainer = ensureElement<HTMLTemplateElement>(settings.modalSelector);
-
-const appData = new AppState({}, events);
 
 const page = new PageView(document.body, settings.pageSettings, events);
 const modalWindow = new ModalView(modalContainer, settings.modalSettings, events);

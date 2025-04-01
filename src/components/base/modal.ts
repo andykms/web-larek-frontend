@@ -13,6 +13,7 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
   init() {
     const deleteButton = this.getElementFromCache(this.settings.buttonClose);
     deleteButton.addEventListener('click',this.close.bind(this));
+    document.body.addEventListener('mousedown', this.closeOutside.bind(this));
 	}
 
   initializeContent(content: HTMLElement): void {
@@ -27,8 +28,15 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
     this.element.classList.add(this.settings.activeClass);
   };
 
+  closeOutside(event: Event): void {
+    if((event.target as HTMLElement).classList.contains(this.settings.activeClass)) {
+      this.close();
+    }
+  }
+
   close(): void {
     this.unblockScroll();
+    document.body.removeEventListener('mousedown', this.close.bind(this));
     this.element.classList.remove(this.settings.activeClass);
     this.popContent();
   };

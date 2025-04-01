@@ -232,7 +232,6 @@ class Product extends View<IProductData, IProductSettings>
 
 Необходим для расширения отдельных API приложения, наследуемые классы API используют методы ```get``` и ```post``` для отправки запросов и получения ответов.
 
-Внутри также есть метод ```handleResponse```, который принимает ответ и возвращает промис с ответом.
 
 ## Модели
 
@@ -319,7 +318,7 @@ interface IProduct {
 Наследуется от базового представления ```View```
 Рендерит контент корзины из некоторых элементов. 
 
-В нем вставляются карточки товаров из представления ```basketProduct```. Также в представлении есть кнопка для оформления заказа.
+В нем вставляются карточки товаров из представления ```basketProduct```.
 
 Представление использует структуру данных,  хэш-таблица - объект ```Map``` для хранения элементов карточек и последующего вывода их.
 
@@ -375,4 +374,73 @@ enum Payments {
 
 Позволяет вставить количество списанных средств.
 
+
+## Слой презентера
+
+Логика презентера представлена в коде ```index.ts```
+
+Сначала инициализируются необходимые модели - AppState, ProductApi, EventEmitter:
+
+```
+//index.ts
+const events = new EventEmitter();
+const api = new ProductApi(API_URL, CDN_URL);
+const appData = new AppState({}, events);
+```
+
+Далее создаются необходимые отображения, куда презентер передает ссылки на события:
+
+```
+//index.ts
+const basketView = new Basket(cloneTemplate(basketTemplate), settings.basketSettings, events);
+const orderView = new OrderForm(cloneTemplate(orderTemplate), settings.orderSettings, events);
+...
+```
+
+При создании представления презентер передает в представления слушатели событий, которые инициализируются в представлениях, например:
+
+```
+//index.ts
+const contactsView = new ContactForm(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
+//Навешивание слушателя на кнопку "Отправить"
+settings.contactsSettings.onSubmit = (event: Event) => {
+  event.preventDefault();
+  //Модель собирает данные из представления и передает их свои поля и методы
+  appData.setContactsOptions(contactsView.contactsData);
+};
+//Инициализация слушателей в представлении
+contactsView.setupListeners();
+```
+
+```
+//contacts.ts
+/*Здесь на кнопку навешивается слушатель события, который передал презентер из index.ts*/
+this.render(this.settings.submitButton).addEventListener('click', this.settings.onSubmit);
+```
+
+При изменении данных в модели происходит оповещение подписанных на событие слушателей. К примеру выше, вызов метода ```appData.setContactsOptions(contactsView.contactsData);``` вызывает оповещение слушателей:
+
+```
+//AppState.ts
+setContactsOptions(options: IContactsOptions): void {
+      ...
+      this.emitChanges('order:all');
+  }
+```
+
+Далее подписчики получают оповещение об изменении данных.
+
+```
+//index.ts
+events.on("order:all", ()=>{
+  appData.submitOrder();
+})
+```
+
+Для начала работы вызывается метод получения товаров:
+```
+api.getProducts().then((products) => {
+  appData.loadProducts(products.items);
+});
+```
 
