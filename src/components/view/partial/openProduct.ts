@@ -1,19 +1,15 @@
 import { View } from "../../base/view";
 import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
 import { IOpenedProductData, IOpenedProductSettings } from "../../../types/components/view/partial/openProduct";
+import { addCurrency } from "../../../utils/utils";
+
 
 export class OpenProductView extends View<IOpenedProductData, IOpenedProductSettings> {
-  public price: number;
-  public index: number;
-  public title: string;
   public id: string;
 
   protected init(data: IProductData|undefined = undefined): void {
     if(data) {
       this.id = data.id;
-      this.price = data.price;
-      this.title = data.title;
-      this.price = data.price;
       this.setCategory(data.category);
       this.setTitle(data.title);
       this.setImg(data.image);
@@ -70,15 +66,11 @@ export class OpenProductView extends View<IOpenedProductData, IOpenedProductSett
     if(!this.isPriceNumber(price)) {
       return this.settings.nullPrice;
     }
-    return this.addCurrency(price, currency);
+    return addCurrency(price, currency);
   }
 
   private isPriceNumber(price: number): boolean {
     const regex: RegExp = /[0-9]+/;
     return regex.test(String(price));
-  }
-
-  private addCurrency(price: number, currency: string): string {
-    return `${price} ${currency}`;
   }
 }

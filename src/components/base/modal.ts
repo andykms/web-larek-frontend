@@ -28,7 +28,7 @@ export class ModalView extends View<Modal, ModalSettings> implements Modal {
     this.element.classList.add(this.settings.activeClass);
   };
 
-  closeOutside(event: Event): void {
+  private closeOutside(event: Event): void {
     if((event.target as HTMLElement).classList.contains(this.settings.activeClass)) {
       this.close();
     }

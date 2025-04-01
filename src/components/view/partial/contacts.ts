@@ -20,21 +20,21 @@ export class ContactView extends FormView<IContactsData, IContactsSettings> {
     this.render(this.settings.phoneInput).addEventListener('input', this.checkErrors.bind(this));
   }
 
-  get isValidEmailInput(): boolean {
+  private get isValidEmailInput(): boolean {
     if(this.isValidInputValueBySelector(this.settings.emailInput)) {
-      return false
+      return false;
     } 
-    return true
+    return true;
   }
 
-  get isValidPhoneInput(): boolean {
+  private get isValidPhoneInput(): boolean {
     if(this.isCorrectPatternInputBySelector(this.settings.phoneInput) && this.isValidInputValueBySelector(this.settings.phoneInput)) {
-      return false
+      return false;
     }
     return true;
   }
 
-  checkErrors() {
+  private checkErrors() {
     let error: string = '';
     let isError = false;
     if(!this.isValidPhoneInput) {
@@ -64,6 +64,6 @@ export class ContactView extends FormView<IContactsData, IContactsSettings> {
     return {
       email: this.getInputValue(this.settings.emailInput),
       phone: this.getInputValue(this.settings.phoneInput)
-    }
+    };
   }
 }

@@ -77,15 +77,25 @@ export class OrderView extends FormView<IOrderData, IOrderSettings> {
   protected setPayment(payment: Payments): void {
     switch(payment) {
       case Payments.online:
+        this.setPaymentView(Payments.online);
+        this.inputPaymentValue = Payments.online;
+        break;
+      case Payments.offline:
+        this.setPaymentView(Payments.offline);
+        this.inputPaymentValue = Payments.offline;
+        break;
+    }
+  }
+
+  protected setPaymentView(payment: Payments) {
+    switch(payment) {
+      case Payments.online:
         this.addClass(this.settings.buttonOnline, this.settings.activeButton.slice(1));
         this.removeClass(this.settings.buttonOffline, this.settings.activeButton.slice(1));
-        console.log(this.render(this.settings.buttonOnline).classList)
-        this.inputPaymentValue = Payments.online;
         break;
       case Payments.offline:
         this.addClass(this.settings.buttonOffline, this.settings.activeButton.slice(1));
         this.removeClass(this.settings.buttonOnline, this.settings.activeButton.slice(1));
-        this.inputPaymentValue = Payments.offline;
         break;
     }
   }

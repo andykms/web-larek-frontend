@@ -1,5 +1,7 @@
 import { View } from "../../base/view";
 import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
+import { addCurrency } from "../../../utils/utils";
+
 
 export class ProductView extends View<IProductData, IProductSettings> {
 
@@ -41,15 +43,11 @@ export class ProductView extends View<IProductData, IProductSettings> {
     if(!this.isPriceNumber(price)) {
       return this.settings.nullPrice;
     }
-    return this.addCurrency(price, currency);
+    return addCurrency(price, currency);
   }
 
   private isPriceNumber(price: number): boolean {
     const regex: RegExp = /[0-9]+/;
     return regex.test(String(price));
-  }
-
-  private addCurrency(price: number, currency: string): string {
-    return `${price} ${currency}`;
   }
 }

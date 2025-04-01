@@ -133,3 +133,7 @@ export function createElement<
     }
     return element;
 }
+
+export function addCurrency(price: number, currency: string): string {
+    return `${price} ${currency}`;
+}

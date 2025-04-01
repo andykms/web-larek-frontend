@@ -11,7 +11,10 @@ export class SuccessView extends View<ISuccessData, ISuccessSettings> {
   }
 
   setTotalPrice(total: number): void {
-    const message: string = `${this.settings.additionalMessage} ${total} ${this.settings.currency}`;
-    this.setValue(this.settings.totalClass, message);
+    this.setValue(this.settings.totalClass, this.formatMessage(total));
+  }
+
+  private formatMessage(total: number): string {
+    return `${this.settings.additionalMessage} ${total} ${this.settings.currency}`;
   }
 }
