@@ -1,4 +1,3 @@
-import { View } from "../../base/view";
 import { IContactsData, IContactsSettings } from "../../../types/components/view/partial/contacts";
 import { FormView } from "../../base/form";
 import { IContactsOptions } from "../../../types/components/model/AppState";

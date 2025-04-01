@@ -1,10 +1,9 @@
-import { IProduct, IProductList } from "../../types/components/model/API";
+import { IProduct } from "../../types/components/model/API";
 import { IAppState, IBasketProduct, Payments } from "../../types/components/model/AppState";
-import { IOrder, IOrderResponse } from "../../types/components/model/API";
-import { IAPI } from "../../types/components/model/API";
-import { Api } from "../base/api";
+import { IOrder } from "../../types/components/model/API";
 import { Model } from "../base/model";
 import { IAddressOptions, IContactsOptions } from "../../types/components/model/AppState";
+
 
 export class AppState extends Model<IAppState> implements IAppState{
 

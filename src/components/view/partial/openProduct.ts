@@ -1,5 +1,5 @@
 import { View } from "../../base/view";
-import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
+import { IProductData } from "../../../types/components/view/partial/product";
 import { IOpenedProductData, IOpenedProductSettings } from "../../../types/components/view/partial/openProduct";
 import { addCurrency } from "../../../utils/utils";
 

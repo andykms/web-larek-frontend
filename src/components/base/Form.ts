@@ -1,6 +1,5 @@
 import { View } from "./view";
-import { IView } from "../../types/components/base/View";
-import { IEvents } from "./events";
+
 
 export abstract class FormView<T,S extends object> extends View<T,S> {
   protected setInputValue(selector: string, newValue: string) {
