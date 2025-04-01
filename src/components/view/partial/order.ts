@@ -1,10 +1,10 @@
-import { Form } from "../../base/Form";
+import { FormView } from "../../base/form";
 import { IOrderData, IOrderSettings } from "../../../types/components/view/partial/order";
 import { Payments } from "../../../types/components/model/AppState";
 import { IAddressOptions } from "../../../types/components/model/AppState";
 
 
-export class OrderForm extends Form<IOrderData, IOrderSettings> {
+export class OrderView extends FormView<IOrderData, IOrderSettings> {
   protected inputPaymentValue: Payments;
   protected init(data: IOrderData|undefined = undefined): void {
     if(data) {

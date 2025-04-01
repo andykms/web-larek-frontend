@@ -1,5 +1,5 @@
 import { IPageData, IPageSettings } from "../../../types/components/view/partial/Page";
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 
 export class PageView extends View<IPageData, IPageSettings> {
 

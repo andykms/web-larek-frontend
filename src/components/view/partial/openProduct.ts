@@ -1,8 +1,8 @@
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
 import { IOpenedProductData, IOpenedProductSettings } from "../../../types/components/view/partial/openProduct";
 
-export class openProduct extends View<IOpenedProductData, IOpenedProductSettings> {
+export class OpenProductView extends View<IOpenedProductData, IOpenedProductSettings> {
   public price: number;
   public index: number;
   public title: string;

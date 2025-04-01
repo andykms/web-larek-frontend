@@ -1,8 +1,8 @@
-import { View } from "./View";
+import { View } from "./view";
 import { IView } from "../../types/components/base/View";
 import { IEvents } from "./events";
 
-export abstract class Form<T,S extends object> extends View<T,S> {
+export abstract class FormView<T,S extends object> extends View<T,S> {
   protected setInputValue(selector: string, newValue: string) {
       if(!this.cache.has(selector)) {
         const element: HTMLInputElement = this.element.querySelector(selector);

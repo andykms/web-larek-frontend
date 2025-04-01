@@ -1,5 +1,5 @@
 import { IBasketProductData, IBasketProductSettings } from "../../../types/components/view/partial/basketProduct";
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 export class BasketProductView extends View<IBasketProductData, IBasketProductSettings> {
   public price: number;
   public index: number;

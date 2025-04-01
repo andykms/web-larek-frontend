@@ -1,9 +1,9 @@
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 import { IContactsData, IContactsSettings } from "../../../types/components/view/partial/contacts";
-import { Form } from "../../base/Form";
+import { FormView } from "../../base/form";
 import { IContactsOptions } from "../../../types/components/model/AppState";
 
-export class ContactForm extends Form<IContactsData, IContactsSettings> {
+export class ContactView extends FormView<IContactsData, IContactsSettings> {
   
   init(data: IContactsData|undefined = undefined) {
     if(data === undefined) {

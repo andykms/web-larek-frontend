@@ -1,7 +1,7 @@
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 import { IProductData, IProductSettings } from "../../../types/components/view/partial/product";
 
-export class Product extends View<IProductData, IProductSettings> {
+export class ProductView extends View<IProductData, IProductSettings> {
 
   protected init(data: IProductData|undefined = undefined): void {
     if(data) {

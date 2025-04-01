@@ -1,6 +1,6 @@
 import { Modal } from "../../types/components/base/modal";
 import { ModalSettings } from "../../types/components/base/modal";
-import { View } from "./View";
+import { View } from "./view";
 import { IEvents } from "./events";
 
 export class ModalView extends View<Modal, ModalSettings> implements Modal {

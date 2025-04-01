@@ -1,11 +1,11 @@
 import { IBasketData, IBasketSettings } from "../../../types/components/view/partial/basket";
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 import { IBasketProduct } from "../../../types/components/model/AppState";
 import { BasketProductView } from "./basketProduct";
 import { IBasketProductSettings } from "../../../types/components/view/partial/basketProduct";
 import { cloneTemplate } from "../../../utils/utils";
 
-export class Basket extends View<IBasketData, IBasketSettings> {
+export class BasketView extends View<IBasketData, IBasketSettings> {
   private items: Map<string, BasketProductView> = new Map<string, BasketProductView>();
 
   protected init(): void {

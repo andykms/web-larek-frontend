@@ -1,6 +1,6 @@
-import { View } from "../../base/View";
+import { View } from "../../base/view";
 import { ISuccessData, ISuccessSettings } from "../../../types/components/view/partial/success";
-export class Success extends View<ISuccessData, ISuccessSettings> {
+export class SuccessView extends View<ISuccessData, ISuccessSettings> {
   init(data: ISuccessData|undefined = undefined): void{
     if(data){
       this.setTotalPrice(data.total);

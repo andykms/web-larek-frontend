@@ -1,21 +1,21 @@
 import './scss/styles.scss';
-import { Product } from './components/view/partial/product';
-import { ProductApi } from './components/model/ProductAPI';
+import { ProductView } from './components/view/partial/product';
+import { ProductApi } from './components/model/productAPI';
 import { API_URL, CDN_URL,  } from './utils/constants';
 import {settings} from './utils/constants';
 import { ModalView } from './components/base/modal';
 import { EventEmitter } from './components/base/events';
-import { Basket } from './components/view/partial/basket';
-import { openProduct } from './components/view/partial/openProduct';
-import { AppState } from './components/model/AppState';
+import { BasketView } from './components/view/partial/basket';
+import { OpenProductView } from './components/view/partial/openProduct';
+import { AppState } from './components/model/appState';
 import { IOrder, IProduct } from './types/components/model/API';
 import { ensureElement, cloneTemplate } from './utils/utils';
-import { PageView } from './components/view/partial/Page';
-import { OrderForm } from './components/view/partial/order';
-import { ContactForm } from './components/view/partial/contacts';
+import { PageView } from './components/view/partial/page';
+import { OrderView} from './components/view/partial/order';
+import { ContactView } from './components/view/partial/contacts';
 import { IOpenedProductData } from './types/components/view/partial/openProduct';
 import { IBasketProduct } from './types/components/model/AppState';
-import { Success } from './components/view/partial/success';
+import { SuccessView } from './components/view/partial/success';
 
 let modal: HTMLElement = document.querySelector('.modal_active');
 modal.classList.remove('modal_active');
@@ -43,8 +43,8 @@ settings.basketSettings.onSubmit = () => {
   appData.startOrder();
 };
 
-const basketView = new Basket(cloneTemplate(basketTemplate), settings.basketSettings, events);
-const orderView = new OrderForm(cloneTemplate(orderTemplate), settings.orderSettings, events);
+const basketView = new BasketView(cloneTemplate(basketTemplate), settings.basketSettings, events);
+const orderView = new OrderView(cloneTemplate(orderTemplate), settings.orderSettings, events);
 
 settings.orderSettings.onSubmit = (event: Event) => {
   event.preventDefault();
@@ -52,7 +52,7 @@ settings.orderSettings.onSubmit = (event: Event) => {
 };
 orderView.setupListenres();
 
-const contactsView = new ContactForm(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
+const contactsView = new ContactView(cloneTemplate(contactsTemplate), settings.contactsSettings, events);
 settings.contactsSettings.onSubmit = (event: Event) => {
   event.preventDefault();
   appData.setContactsOptions(contactsView.contactsData);
@@ -64,19 +64,19 @@ settings.successSettings.onSubmit = (event: Event) => {
   modalWindow.close();
 };
 
-const successView = new Success(cloneTemplate(successTemplate), settings.successSettings, events);
+const successView = new SuccessView(cloneTemplate(successTemplate), settings.successSettings, events);
 
 events.on('items:changed', () => {
   page.setCatalog(Array.from(appData.products.values()).map((product: IProduct) => {
     settings.productSettings.onClick = () => {
       appData.selectProduct(product);
     };
-    return new Product(cloneTemplate(cardCatalogTemplate), settings.productSettings,events, product).render();
+    return new ProductView(cloneTemplate(cardCatalogTemplate), settings.productSettings,events, product).render();
   }))
 });
 
 events.on('product:selected', (product: IProduct) => {
-  const productView = new openProduct(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData);
+  const productView = new OpenProductView(cloneTemplate(cardPreviewTemplate), settings.openProductSettings, events, product as IOpenedProductData);
   
   settings.openProductSettings.onClick = () => {
     if(!appData.isHasProductInBasket(product.id)){

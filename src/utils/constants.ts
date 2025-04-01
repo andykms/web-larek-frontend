@@ -1,5 +1,5 @@
 import { events } from "..";
-import { openProduct } from "../components/view/partial/openProduct";
+import { OpenProductView } from "../components/view/partial/openProduct";
 import { IProductData } from "../types/components/view/partial/product";
 
 export const API_URL = `${process.env.API_ORIGIN}/api/weblarek`;
