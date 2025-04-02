@@ -19,13 +19,6 @@ export class ContactView extends FormView<IContactsData, IContactsSettings> {
     this.render(this.settings.phoneInput).addEventListener('input', this.checkErrors.bind(this));
   }
 
-  private get isValidEmailInput(): boolean {
-    if(this.isValidInputValueBySelector(this.settings.emailInput)) {
-      return false;
-    } 
-    return true;
-  }
-
   private get isValidPhoneInput(): boolean {
     if(this.isCorrectPatternInputBySelector(this.settings.phoneInput) && this.isValidInputValueBySelector(this.settings.phoneInput)) {
       return false;
@@ -34,17 +27,19 @@ export class ContactView extends FormView<IContactsData, IContactsSettings> {
   }
 
   private checkErrors() {
-    let error: string = '';
-    let isError = false;
-    if(!this.isValidPhoneInput) {
-      error = this.settings.phoneErrorText;
-      isError = true;
-    } 
-    if(!this.isValidEmailInput) {
-      error = this.getValidErrorBySelector(this.settings.emailInput);
-      isError = true;
-    } 
-    if(isError) {
+    if(this.isValidInputValueBySelector(this.settings.emailInput)) {
+      this.toggleError(this.getValidErrorBySelector(this.settings.emailInput));
+
+    } else if(!this.isValidPhoneInput) {
+      this.toggleError(this.settings.phoneErrorText);
+
+    } else {
+      this.toggleError();
+    }
+  }
+
+  private toggleError(error: string|undefined = undefined) {
+    if(error) {
       this.setError(this.settings.formError, error, this.settings.submitButton);
     } else {
       this.setSuccess(this.settings.formError, '', this.settings.submitButton);
