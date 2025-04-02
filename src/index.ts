@@ -19,9 +19,8 @@ import { SuccessView } from './components/view/partial/success';
 import { BasketProductView } from './components/view/partial/basketProduct';
 
 
-let modal: HTMLElement = document.querySelector('.modal_active');
-modal.classList.remove('modal_active');
-modal = document.querySelector('.modal');
+document.querySelector('.modal_active')?.classList?.remove('modal_active');
+const modal = document.querySelector('.modal');
 
 
 export const events = new EventEmitter();
