@@ -123,6 +123,11 @@ class Product extends View<IProductData, IProductSettings>
 ```
 метод, противоположный appendChildView – удаляет потомка. Если потомок не найдется в элементе, удаление не произойдет
 
+```
+11. setDisabled(selector: string, state: boolean)
+```
+принимает селектор элемента, если ```state``` равен ```true```, то элемент с данным селектором становится неактивным, если ```state``` равен ```false```, то активен.
+
 **Абстрактный класс Form<T,S extends object> extends View<T,S>**
 
 Расширяет базовое представление методами для форм. Не изменяет родительские методы, в том числе конструктор. Дополнительных полей нет – предполагается что элементы форм, например теги ```input``` будут вводится в сами методы. 
@@ -253,21 +258,27 @@ class Product extends View<IProductData, IProductSettings>
 
 корзина - ```basket```, которая представлена хэш-таблицей, где ключ - id товара, а значение - интерфейс товара, 
 
-заказ - ```order```, требующий интерфейс ```IOrder```
+информация о клиенте - ```customerInfo```, требующий интерфейс ```ICustomerInfo```
+
 ```
-interface IOrder {
-  payment: Payments;
+//src/types/model/AppState.ts
+export interface ICustomerInfo extends IContactsOptions, IAddressOptions{
+}
+
+export interface IContactsOptions {
   email: string;
   phone: string;
+}
+
+export interface IAddressOptions {
   address: string;
-  total: number;
-  items: string[];
+  payment: Payments;
 }
 ```
 
 и методы:
 
-для загрузки товаров ```loadProducts```, выбора товара ```selectProduct```, добавления товара в корзину ```addProductToBasket```, удаления товара из корзины ```removeProductFromBasket```, вставки адреса```writeAddress```, вставки E-mail ```writeEmail```, выбора способа оплаты ```choosePaymentMethod```, сборки заказа ```submitOrder```, подтверждения заказа ```successOrder```, и другие вспомогательные методы.
+для загрузки товаров ```loadProducts```, выбора товара ```selectProduct```, добавления товара в корзину ```addProductToBasket```, удаления товара из корзины ```removeProductFromBasket```, вставки адреса```writeAddress```, вставки E-mail ```writeEmail```, выбора способа оплаты ```choosePaymentMethod```, сборки заказа ```submitOrder```, подтверждения заказа ```successOrder```, получения товаров из корзины ```get basketProducts()```, получения заказа на основе полученных данных пользователя и корзины ```get order()``` и другие вспомогательные методы.
 
 **Класс ProductApi**
 
@@ -348,7 +359,15 @@ interface IView<T, S = object> {
 
 В проекте, например, в нем вставляются карточки товаров из представления ```BasketProductView```, реализующий данные интерфейсы.
 
-Представление использует структуру данных,  хэш-таблица - объект ```Map``` для хранения элементов корзины и последующего вывода их.
+Метод для вставки элемента:
+```
+insertProduct(newProduct: IBasketItem<T, S>, index: number)
+```
+
+Методы для удаления всех элементов:
+```
+removeProducts()
+```
 
 **Класс ContactView**
 
