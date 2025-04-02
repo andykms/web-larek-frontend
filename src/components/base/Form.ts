@@ -56,11 +56,11 @@ export abstract class FormView<T,S extends object> extends View<T,S> {
   }
   
   protected deactivateButton(buttonSelector: string) {
-    this.setValue(buttonSelector, {'disabled': 'disabled'});
+    this.setDisabled(buttonSelector, true);
   }
 
   protected activateButton(buttonSelector: string) {
-    this.removeAttribute(buttonSelector, 'disabled');
+    this.setDisabled(buttonSelector, false);
   }
 
   protected getInputValue(selector: string): string {

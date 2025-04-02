@@ -16,7 +16,7 @@ export class BasketView<T, S extends Object> extends View<IBasketData, IBasketSe
   }
 
   private showEmptyError(): void {
-    this.setValue(this.settings.buttonClass, {'disabled': 'disabled'});
+    this.setDisabled(this.settings.buttonClass, true);
   }
 
   insertProduct(newProduct: IBasketItem<T, S>, index: number): void {
