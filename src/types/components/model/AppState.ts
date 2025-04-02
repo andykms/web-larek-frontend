@@ -16,6 +16,10 @@ export interface IAddressOptions {
   payment: Payments;
 }
 
+export interface ICustomerInfo extends IContactsOptions, IAddressOptions{
+
+}
+
 export interface IBasket<T> {
   items: Map<number, T>;
 }
@@ -25,10 +29,9 @@ export interface IAppState {
   selectedProduct: IProduct | null;
   basketTotal: number;
   basket: Map<string, IBasketProduct>;
-  order: IOrder;
-  packedOrderItems(): void;
-  setTotalIntoOrder(): void;
-  getTotalPrice(): number;
+  customerInfo: ICustomerInfo;
+  get order(): IOrder;
+  get totalPrice(): number;
   loadProducts(items: IProduct[]): void;
   selectProduct(product: IProduct): void;
   addProductToBasket(product: IProduct): void;
@@ -45,8 +48,6 @@ export interface IAppState {
   writePhone(phone: string): void;
   isValidPhone(): boolean;
   submitOrder(): void;
-  clearOrder(): void;
-  clearBasket(): void;
 }
 
 export enum Payments {

@@ -1,5 +1,5 @@
 import { IProduct } from "../../types/components/model/API";
-import { IAppState, IBasketProduct, Payments } from "../../types/components/model/AppState";
+import { IAppState, IBasketProduct, Payments, ICustomerInfo} from "../../types/components/model/AppState";
 import { IOrder } from "../../types/components/model/API";
 import { Model } from "../base/model";
 import { IAddressOptions, IContactsOptions } from "../../types/components/model/AppState";
@@ -10,13 +10,11 @@ export class AppState extends Model<IAppState> implements IAppState{
   products: Map<string, IProduct> = new Map<string, IProduct>();
   selectedProduct: IProduct = null;
   basket: Map<string, IBasketProduct> = new Map<string, IBasketProduct>();
-  order: IOrder = {
-    payment: Payments.online,
+  customerInfo: ICustomerInfo = {
+    payment: Payments.none,
     email: '',
     phone: '',
     address: '',
-    total: 0,
-    items: []
   };
 
   get basketTotal(): number {
@@ -36,24 +34,38 @@ export class AppState extends Model<IAppState> implements IAppState{
     }
   }
 
-  packedOrderItems(): void {
+  get basketProducts(): IBasketProduct[] {
+    return Array.from(this.basket.values());
+  }
+
+  get orderItems(): string[] {
     const basketItems: IBasketProduct[] = Array.from(this.basket.values());
+    const orderItems: string[] = [];
     basketItems.forEach((product) => {
-      this.order.items.push(product.id);
+      orderItems.push(product.id);
     });
+    return orderItems;
   }
 
-  setTotalIntoOrder(): void {
-    this.order.total = this.getTotalPrice();
-  }
-
-  getTotalPrice(): number {
+  get totalPrice(): number {
     let total = 0;
     const basketItems: IBasketProduct[] = Array.from(this.basket.values());
     basketItems.forEach((product) => {
       total += product.price;
     });
     return total;
+  }
+
+  get order(): IOrder {
+    const order: IOrder = {
+      payment: this.customerInfo.payment,
+      email: this.customerInfo.email,
+      phone: this.customerInfo.phone,
+      address: this.customerInfo.address,
+      items: this.orderItems,
+      total: this.totalPrice,
+    }
+    return order;
   }
 
   selectProduct(product: IProduct): void {
@@ -67,13 +79,11 @@ export class AppState extends Model<IAppState> implements IAppState{
       title: product.title,
       price: product.price,
     });
-    this.emitChanges('basket:changed:add', product);
   }
 
   removeProductFromBasket(id: string): void {
     if(this.basket.has(id)) {
       this.basket.delete(id);
-      this.emitChanges('basket:changed:remove', {id});
     } else {
       throw new Error('Product not found');
     }
@@ -107,64 +117,59 @@ export class AppState extends Model<IAppState> implements IAppState{
   }
 
   choosePaymentMethod(paymentMethod: Payments): void {
-    this.order.payment = paymentMethod;
+    this.customerInfo.payment = paymentMethod;
   }
 
   isValidPaymentMethod(): boolean {
-    return this.order.payment !== Payments.none;
+    return this.customerInfo.payment !== Payments.none;
   }
 
   writeAddress(address: string): void {
-    this.order.address = address;
+    this.customerInfo.address = address;
   }
 
   isValidAddress(): boolean {
-    return this.order.address.length > 0;
+    return this.customerInfo.address.length > 0;
   }
 
   writeEmail(email: string): void {
-    this.order.email = email;
+    this.customerInfo.email = email;
   }
 
   isValidEmail(): boolean {
-    return this.order.email.length > 0;
+    return this.customerInfo.email.length > 0;
   }
 
   writePhone(phone: string): void {
-    this.order.phone = phone;
+    this.customerInfo.phone = phone;
   }
 
   isValidPhone(): boolean {
-    return this.order.phone.length > 0;
+    return this.customerInfo.phone.length > 0;
   }
 
   /*Отправить заказ */
   submitOrder(): void {
-    this.packedOrderItems();
-    this.setTotalIntoOrder();
-    this.emitChanges('order:all:packed', this.order);
+    const order: IOrder = this.order;
+    this.emitChanges('order:all:packed', order);
   }
 
   successOrder(): void {
-    this.emitChanges('order:success');
-    this.clearOrder();
+    this.emitChanges('order:success', {total: this.totalPrice});
+    this.clearCustomerInfo();
     this.clearBasket();
   }
 
-  clearOrder(): void {
-    this.order = {
+  clearCustomerInfo(): void {
+    this.customerInfo = {
       payment: Payments.none,
       email: '',
       phone: '',
       address: '',
-      total: 0,
-      items: []
-    };
+    }
   }
 
   clearBasket(): void {
-    Array.from(this.basket.values()).forEach((product) => {
-      this.removeProductFromBasket(product.id);
-    });
+    this.basket.clear();
   }
 } 

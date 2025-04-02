@@ -134,7 +134,6 @@ events.on("order:all", ()=>{
 })
 
 events.on("order:all:packed", (order: IOrder) => {
-  console.log(order);
   api.postOrder(order)
     .then((response) => {
       appData.successOrder();
@@ -146,7 +145,7 @@ events.on("order:all:packed", (order: IOrder) => {
 });
 
 events.on("order:success", () => {
-  successView.setTotalPrice(appData.getTotalPrice());
+  successView.setTotalPrice(appData.totalPrice);
   modalWindow.initializeContent(successView.render());
 });
 
