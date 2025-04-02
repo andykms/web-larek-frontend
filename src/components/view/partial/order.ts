@@ -11,7 +11,6 @@ export class OrderView extends FormView<IOrderData, IOrderSettings> {
       this.setAddress(data.address);
       this.setPayment(data.payment);
     }
-    console.log(this.settings, 'settings')
   }
 
   protected setAddress(address: string): void {

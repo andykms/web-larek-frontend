@@ -3,14 +3,14 @@ import { ISuccessData, ISuccessSettings } from "../../../types/components/view/p
 export class SuccessView extends View<ISuccessData, ISuccessSettings> {
   init(data: ISuccessData|undefined = undefined): void{
     if(data){
-      this.setTotalPrice(data.total);
+      this.totalPrice = data.total;
     }
     if(this.settings.onSubmit) {
       this.render(this.settings.submitButton).addEventListener('click', this.settings.onSubmit);
     }
   }
 
-  setTotalPrice(total: number): void {
+  set totalPrice(total: number) {
     this.setValue(this.settings.totalClass, this.formatMessage(total));
   }
 

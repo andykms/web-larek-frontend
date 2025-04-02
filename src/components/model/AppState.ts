@@ -79,11 +79,13 @@ export class AppState extends Model<IAppState> implements IAppState{
       title: product.title,
       price: product.price,
     });
+    this.emitChanges('basket:changed:add');
   }
 
   removeProductFromBasket(id: string): void {
     if(this.basket.has(id)) {
       this.basket.delete(id);
+      this.emitChanges('basket:changed:remove');
     } else {
       throw new Error('Product not found');
     }
@@ -171,5 +173,7 @@ export class AppState extends Model<IAppState> implements IAppState{
 
   clearBasket(): void {
     this.basket.clear();
+    /*Оповещение для изменения счетчика корзины на ноль */
+    this.emitChanges('basket:changed:remove');
   }
 } 

@@ -100,26 +100,24 @@ events.on('product:selected', (product: IProduct) => {
   modalWindow.initializeContent(productView.render());
 });
 
-events.on('basket:changed:add', (product: IProduct) => {
-  settings.basketProductSettings.onClick = () => {
-    appData.removeProductFromBasket(product.id);
-  };
-  const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), settings.basketProductSettings, events, product);
-  basketView.insertProduct(basketProduct);
-});
-
-events.on('basket:changed:remove', (product: IBasketProduct) => {
-  basketView.removeProduct(product.id); 
-});
+events.on("basket:open", () =>{
+  basketView.removeProducts();
+  const basketProductsInfo: IBasketProduct[] = appData.basketProducts;
+  basketProductsInfo.forEach((product: IBasketProduct, index) => {
+    settings.basketProductSettings.onClick = () => {
+      appData.removeProductFromBasket(product.id);
+      events.emit('basket:open');
+    };
+    const basketProduct = new BasketProductView(cloneTemplate(cardBasketTemplate), settings.basketProductSettings, events, product);
+    basketView.insertProduct(basketProduct, index);
+  });
+  basketView.totalPrice = appData.totalPrice;
+  modalWindow.initializeContent(basketView.render());
+})
 
 events.on(new RegExp("basket:changed:.*"), () => {
   page.setCounter(appData.basketSize);
 });
-
-events.on("basket:open", () =>{
-  basketView.showProducts();
-  modalWindow.initializeContent(basketView.render());
-})
 
 events.on("order:open", () => {
   modalWindow.initializeContent(orderView.render());
@@ -137,20 +135,16 @@ events.on("order:all:packed", (order: IOrder) => {
   api.postOrder(order)
     .then((response) => {
       appData.successOrder();
-      console.log(response);
+      console.log('RESPONSE ',response);
     })
     .catch((error) => {
-      console.log(error);
+      console.log('ERROR ',error);
     });
 });
 
 events.on("order:success", () => {
-  successView.setTotalPrice(appData.totalPrice);
+  successView.totalPrice = appData.totalPrice;
   modalWindow.initializeContent(successView.render());
-});
-
-events.on("basket:changed:clear", () => {
-  basketView.clearProducts();
 });
 
 api.getProducts().then((products) => {
