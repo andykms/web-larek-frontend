@@ -114,4 +114,12 @@ export abstract class View<T, S extends object> implements IView<T, S> {
 			}
 		}
 	}
+
+	protected setDisabled(selector: string, state: boolean) {
+		const element: HTMLElement = this.getElementFromCache(selector);
+		if (element) {
+				if (state) element.setAttribute('disabled', 'disabled');
+				else element.removeAttribute('disabled');
+		}
+}
 }
